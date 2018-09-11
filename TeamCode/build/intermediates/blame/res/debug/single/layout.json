@@ -1,0 +1,226 @@
+[
+    {
+        "merged": "/Users/admin/Documents/4451-Rover_Ruckus/TeamCode/build/intermediates/res/merged/debug/layout/activity_ftc_wifi_remembered_groups.xml",
+        "source": "/Users/admin/.android/build-cache/465da1f086bcfebe3ed469f87cd0c39f01f0d80e/output/res/layout/activity_ftc_wifi_remembered_groups.xml"
+    },
+    {
+        "merged": "/Users/admin/Documents/4451-Rover_Ruckus/TeamCode/build/intermediates/res/merged/debug/layout/pwm_device.xml",
+        "source": "/Users/admin/.android/build-cache/465da1f086bcfebe3ed469f87cd0c39f01f0d80e/output/res/layout/pwm_device.xml"
+    },
+    {
+        "merged": "/Users/admin/Documents/4451-Rover_Ruckus/TeamCode/build/intermediates/res/merged/debug/layout/template_info.xml",
+        "source": "/Users/admin/.android/build-cache/465da1f086bcfebe3ed469f87cd0c39f01f0d80e/output/res/layout/template_info.xml"
+    },
+    {
+        "merged": "/Users/admin/Documents/4451-Rover_Ruckus/TeamCode/build/intermediates/res/merged/debug/layout/activity_program_and_manage.xml",
+        "source": "/Users/admin/.android/build-cache/465da1f086bcfebe3ed469f87cd0c39f01f0d80e/output/res/layout/activity_program_and_manage.xml"
+    },
+    {
+        "merged": "/Users/admin/Documents/4451-Rover_Ruckus/TeamCode/build/intermediates/res/merged/debug/layout/motor.xml",
+        "source": "/Users/admin/.android/build-cache/465da1f086bcfebe3ed469f87cd0c39f01f0d80e/output/res/layout/motor.xml"
+    },
+    {
+        "merged": "/Users/admin/Documents/4451-Rover_Ruckus/TeamCode/build/intermediates/res/merged/debug/layout/activity_config_wifi_direct.xml",
+        "source": "/Users/admin/.android/build-cache/465da1f086bcfebe3ed469f87cd0c39f01f0d80e/output/res/layout/activity_config_wifi_direct.xml"
+    },
+    {
+        "merged": "/Users/admin/Documents/4451-Rover_Ruckus/TeamCode/build/intermediates/res/merged/debug/layout/digital_devices.xml",
+        "source": "/Users/admin/.android/build-cache/465da1f086bcfebe3ed469f87cd0c39f01f0d80e/output/res/layout/digital_devices.xml"
+    },
+    {
+        "merged": "/Users/admin/Documents/4451-Rover_Ruckus/TeamCode/build/intermediates/res/merged/debug/layout/activity_generic_settings.xml",
+        "source": "/Users/admin/.android/build-cache/465da1f086bcfebe3ed469f87cd0c39f01f0d80e/output/res/layout/activity_generic_settings.xml"
+    },
+    {
+        "merged": "/Users/admin/Documents/4451-Rover_Ruckus/TeamCode/build/intermediates/res/merged/debug/layout/activity_ftc_lynx_fw_update.xml",
+        "source": "/Users/admin/.android/build-cache/465da1f086bcfebe3ed469f87cd0c39f01f0d80e/output/res/layout/activity_ftc_lynx_fw_update.xml"
+    },
+    {
+        "merged": "/Users/admin/Documents/4451-Rover_Ruckus/TeamCode/build/intermediates/res/merged/debug/layout/activity_view_logs.xml",
+        "source": "/Users/admin/.android/build-cache/465da1f086bcfebe3ed469f87cd0c39f01f0d80e/output/res/layout/activity_view_logs.xml"
+    },
+    {
+        "merged": "/Users/admin/Documents/4451-Rover_Ruckus/TeamCode/build/intermediates/res/merged/debug/layout/matrices.xml",
+        "source": "/Users/admin/.android/build-cache/465da1f086bcfebe3ed469f87cd0c39f01f0d80e/output/res/layout/matrices.xml"
+    },
+    {
+        "merged": "/Users/admin/Documents/4451-Rover_Ruckus/TeamCode/build/intermediates/res/merged/debug/layout/analog_outputs.xml",
+        "source": "/Users/admin/.android/build-cache/465da1f086bcfebe3ed469f87cd0c39f01f0d80e/output/res/layout/analog_outputs.xml"
+    },
+    {
+        "merged": "/Users/admin/Documents/4451-Rover_Ruckus/TeamCode/build/intermediates/res/merged/debug/layout/activity_ftc_lynx_address_update.xml",
+        "source": "/Users/admin/.android/build-cache/465da1f086bcfebe3ed469f87cd0c39f01f0d80e/output/res/layout/activity_ftc_lynx_address_update.xml"
+    },
+    {
+        "merged": "/Users/admin/Documents/4451-Rover_Ruckus/TeamCode/build/intermediates/res/merged/debug/layout/simple_device.xml",
+        "source": "/Users/admin/.android/build-cache/465da1f086bcfebe3ed469f87cd0c39f01f0d80e/output/res/layout/simple_device.xml"
+    },
+    {
+        "merged": "/Users/admin/Documents/4451-Rover_Ruckus/TeamCode/build/intermediates/res/merged/debug/layout/servo_list.xml",
+        "source": "/Users/admin/.android/build-cache/465da1f086bcfebe3ed469f87cd0c39f01f0d80e/output/res/layout/servo_list.xml"
+    },
+    {
+        "merged": "/Users/admin/Documents/4451-Rover_Ruckus/TeamCode/build/intermediates/res/merged/debug/layout/analog_input_device.xml",
+        "source": "/Users/admin/.android/build-cache/465da1f086bcfebe3ed469f87cd0c39f01f0d80e/output/res/layout/analog_input_device.xml"
+    },
+    {
+        "merged": "/Users/admin/Documents/4451-Rover_Ruckus/TeamCode/build/intermediates/res/merged/debug/layout/lynx_module_configure_address_spin_item.xml",
+        "source": "/Users/admin/.android/build-cache/465da1f086bcfebe3ed469f87cd0c39f01f0d80e/output/res/layout/lynx_module_configure_address_spin_item.xml"
+    },
+    {
+        "merged": "/Users/admin/Documents/4451-Rover_Ruckus/TeamCode/build/intermediates/res/merged/debug/layout/activity_about.xml",
+        "source": "/Users/admin/.android/build-cache/465da1f086bcfebe3ed469f87cd0c39f01f0d80e/output/res/layout/activity_about.xml"
+    },
+    {
+        "merged": "/Users/admin/Documents/4451-Rover_Ruckus/TeamCode/build/intermediates/res/merged/debug/layout/item_list_parent.xml",
+        "source": "/Users/admin/.android/build-cache/465da1f086bcfebe3ed469f87cd0c39f01f0d80e/output/res/layout/item_list_parent.xml"
+    },
+    {
+        "merged": "/Users/admin/Documents/4451-Rover_Ruckus/TeamCode/build/intermediates/res/merged/debug/layout/color_list_preference_line_item.xml",
+        "source": "/Users/admin/.android/build-cache/1c7dc98e7aa3317b15cbd71a7a6fcf01e88cc1f6/output/res/layout/color_list_preference_line_item.xml"
+    },
+    {
+        "merged": "/Users/admin/Documents/4451-Rover_Ruckus/TeamCode/build/intermediates/res/merged/debug/layout/lynx_module_configure_address.xml",
+        "source": "/Users/admin/.android/build-cache/465da1f086bcfebe3ed469f87cd0c39f01f0d80e/output/res/layout/lynx_module_configure_address.xml"
+    },
+    {
+        "merged": "/Users/admin/Documents/4451-Rover_Ruckus/TeamCode/build/intermediates/res/merged/debug/layout/digital_device.xml",
+        "source": "/Users/admin/.android/build-cache/465da1f086bcfebe3ed469f87cd0c39f01f0d80e/output/res/layout/digital_device.xml"
+    },
+    {
+        "merged": "/Users/admin/Documents/4451-Rover_Ruckus/TeamCode/build/intermediates/res/merged/debug/layout/i2cs.xml",
+        "source": "/Users/admin/.android/build-cache/465da1f086bcfebe3ed469f87cd0c39f01f0d80e/output/res/layout/i2cs.xml"
+    },
+    {
+        "merged": "/Users/admin/Documents/4451-Rover_Ruckus/TeamCode/build/intermediates/res/merged/debug/layout/lynx_module.xml",
+        "source": "/Users/admin/.android/build-cache/465da1f086bcfebe3ed469f87cd0c39f01f0d80e/output/res/layout/lynx_module.xml"
+    },
+    {
+        "merged": "/Users/admin/Documents/4451-Rover_Ruckus/TeamCode/build/intermediates/res/merged/debug/layout/digital_device_lynx.xml",
+        "source": "/Users/admin/.android/build-cache/465da1f086bcfebe3ed469f87cd0c39f01f0d80e/output/res/layout/digital_device_lynx.xml"
+    },
+    {
+        "merged": "/Users/admin/Documents/4451-Rover_Ruckus/TeamCode/build/intermediates/res/merged/debug/layout/loading_indicator_overlay.xml",
+        "source": "/Users/admin/.android/build-cache/1c7dc98e7aa3317b15cbd71a7a6fcf01e88cc1f6/output/res/layout/loading_indicator_overlay.xml"
+    },
+    {
+        "merged": "/Users/admin/Documents/4451-Rover_Ruckus/TeamCode/build/intermediates/res/merged/debug/layout/activity_load.xml",
+        "source": "/Users/admin/.android/build-cache/465da1f086bcfebe3ed469f87cd0c39f01f0d80e/output/res/layout/activity_load.xml"
+    },
+    {
+        "merged": "/Users/admin/Documents/4451-Rover_Ruckus/TeamCode/build/intermediates/res/merged/debug/layout/legacy.xml",
+        "source": "/Users/admin/.android/build-cache/465da1f086bcfebe3ed469f87cd0c39f01f0d80e/output/res/layout/legacy.xml"
+    },
+    {
+        "merged": "/Users/admin/Documents/4451-Rover_Ruckus/TeamCode/build/intermediates/res/merged/debug/layout/info_button.xml",
+        "source": "/Users/admin/.android/build-cache/465da1f086bcfebe3ed469f87cd0c39f01f0d80e/output/res/layout/info_button.xml"
+    },
+    {
+        "merged": "/Users/admin/Documents/4451-Rover_Ruckus/TeamCode/build/intermediates/res/merged/debug/layout/lynx_usb_device.xml",
+        "source": "/Users/admin/.android/build-cache/465da1f086bcfebe3ed469f87cd0c39f01f0d80e/output/res/layout/lynx_usb_device.xml"
+    },
+    {
+        "merged": "/Users/admin/Documents/4451-Rover_Ruckus/TeamCode/build/intermediates/res/merged/debug/layout/device_interface_module.xml",
+        "source": "/Users/admin/.android/build-cache/465da1f086bcfebe3ed469f87cd0c39f01f0d80e/output/res/layout/device_interface_module.xml"
+    },
+    {
+        "merged": "/Users/admin/Documents/4451-Rover_Ruckus/TeamCode/build/intermediates/res/merged/debug/layout/activity_configure_from_template.xml",
+        "source": "/Users/admin/.android/build-cache/465da1f086bcfebe3ed469f87cd0c39f01f0d80e/output/res/layout/activity_configure_from_template.xml"
+    },
+    {
+        "merged": "/Users/admin/Documents/4451-Rover_Ruckus/TeamCode/build/intermediates/res/merged/debug/layout/i2c_device.xml",
+        "source": "/Users/admin/.android/build-cache/465da1f086bcfebe3ed469f87cd0c39f01f0d80e/output/res/layout/i2c_device.xml"
+    },
+    {
+        "merged": "/Users/admin/Documents/4451-Rover_Ruckus/TeamCode/build/intermediates/res/merged/debug/layout/matrix_devices.xml",
+        "source": "/Users/admin/.android/build-cache/465da1f086bcfebe3ed469f87cd0c39f01f0d80e/output/res/layout/matrix_devices.xml"
+    },
+    {
+        "merged": "/Users/admin/Documents/4451-Rover_Ruckus/TeamCode/build/intermediates/res/merged/debug/layout/file_info.xml",
+        "source": "/Users/admin/.android/build-cache/465da1f086bcfebe3ed469f87cd0c39f01f0d80e/output/res/layout/file_info.xml"
+    },
+    {
+        "merged": "/Users/admin/Documents/4451-Rover_Ruckus/TeamCode/build/intermediates/res/merged/debug/layout/activity_ftc_wifi_channel_selector.xml",
+        "source": "/Users/admin/.android/build-cache/465da1f086bcfebe3ed469f87cd0c39f01f0d80e/output/res/layout/activity_ftc_wifi_channel_selector.xml"
+    },
+    {
+        "merged": "/Users/admin/Documents/4451-Rover_Ruckus/TeamCode/build/intermediates/res/merged/debug/layout/motor_controller_banner.xml",
+        "source": "/Users/admin/.android/build-cache/465da1f086bcfebe3ed469f87cd0c39f01f0d80e/output/res/layout/motor_controller_banner.xml"
+    },
+    {
+        "merged": "/Users/admin/Documents/4451-Rover_Ruckus/TeamCode/build/intermediates/res/merged/debug/layout/header.xml",
+        "source": "/Users/admin/.android/build-cache/465da1f086bcfebe3ed469f87cd0c39f01f0d80e/output/res/layout/header.xml"
+    },
+    {
+        "merged": "/Users/admin/Documents/4451-Rover_Ruckus/TeamCode/build/intermediates/res/merged/debug/layout/motor_list.xml",
+        "source": "/Users/admin/.android/build-cache/465da1f086bcfebe3ed469f87cd0c39f01f0d80e/output/res/layout/motor_list.xml"
+    },
+    {
+        "merged": "/Users/admin/Documents/4451-Rover_Ruckus/TeamCode/build/intermediates/res/merged/debug/layout/servo.xml",
+        "source": "/Users/admin/.android/build-cache/465da1f086bcfebe3ed469f87cd0c39f01f0d80e/output/res/layout/servo.xml"
+    },
+    {
+        "merged": "/Users/admin/Documents/4451-Rover_Ruckus/TeamCode/build/intermediates/res/merged/debug/layout/analog_output_device.xml",
+        "source": "/Users/admin/.android/build-cache/465da1f086bcfebe3ed469f87cd0c39f01f0d80e/output/res/layout/analog_output_device.xml"
+    },
+    {
+        "merged": "/Users/admin/Documents/4451-Rover_Ruckus/TeamCode/build/intermediates/res/merged/debug/layout/activity_programming_mode.xml",
+        "source": "/Users/admin/.android/build-cache/365012a67b8d3ff4e89b251da5c55ce3c8336801/output/res/layout/activity_programming_mode.xml"
+    },
+    {
+        "merged": "/Users/admin/Documents/4451-Rover_Ruckus/TeamCode/build/intermediates/res/merged/debug/layout/banner_parent.xml",
+        "source": "/Users/admin/.android/build-cache/465da1f086bcfebe3ed469f87cd0c39f01f0d80e/output/res/layout/banner_parent.xml"
+    },
+    {
+        "merged": "/Users/admin/Documents/4451-Rover_Ruckus/TeamCode/build/intermediates/res/merged/debug/layout/port_attached_row.xml",
+        "source": "/Users/admin/.android/build-cache/465da1f086bcfebe3ed469f87cd0c39f01f0d80e/output/res/layout/port_attached_row.xml"
+    },
+    {
+        "merged": "/Users/admin/Documents/4451-Rover_Ruckus/TeamCode/build/intermediates/res/merged/debug/layout/servo_controller_banner.xml",
+        "source": "/Users/admin/.android/build-cache/465da1f086bcfebe3ed469f87cd0c39f01f0d80e/output/res/layout/servo_controller_banner.xml"
+    },
+    {
+        "merged": "/Users/admin/Documents/4451-Rover_Ruckus/TeamCode/build/intermediates/res/merged/debug/layout/activity_inspection.xml",
+        "source": "/Users/admin/.android/build-cache/10089bd07629cbb92b66376afafe634aae23d4d0/output/res/layout/activity_inspection.xml"
+    },
+    {
+        "merged": "/Users/admin/Documents/4451-Rover_Ruckus/TeamCode/build/intermediates/res/merged/debug/layout/button_list.xml",
+        "source": "/Users/admin/.android/build-cache/465da1f086bcfebe3ed469f87cd0c39f01f0d80e/output/res/layout/button_list.xml"
+    },
+    {
+        "merged": "/Users/admin/Documents/4451-Rover_Ruckus/TeamCode/build/intermediates/res/merged/debug/layout/red_line.xml",
+        "source": "/Users/admin/.android/build-cache/465da1f086bcfebe3ed469f87cd0c39f01f0d80e/output/res/layout/red_line.xml"
+    },
+    {
+        "merged": "/Users/admin/Documents/4451-Rover_Ruckus/TeamCode/build/intermediates/res/merged/debug/layout/gray_line.xml",
+        "source": "/Users/admin/.android/build-cache/465da1f086bcfebe3ed469f87cd0c39f01f0d80e/output/res/layout/gray_line.xml"
+    },
+    {
+        "merged": "/Users/admin/Documents/4451-Rover_Ruckus/TeamCode/build/intermediates/res/merged/debug/layout/analog_inputs.xml",
+        "source": "/Users/admin/.android/build-cache/465da1f086bcfebe3ed469f87cd0c39f01f0d80e/output/res/layout/analog_inputs.xml"
+    },
+    {
+        "merged": "/Users/admin/Documents/4451-Rover_Ruckus/TeamCode/build/intermediates/res/merged/debug/layout/activity_ftc_configuration.xml",
+        "source": "/Users/admin/.android/build-cache/465da1f086bcfebe3ed469f87cd0c39f01f0d80e/output/res/layout/activity_ftc_configuration.xml"
+    },
+    {
+        "merged": "/Users/admin/Documents/4451-Rover_Ruckus/TeamCode/build/intermediates/res/merged/debug/layout/activity_blocks.xml",
+        "source": "/Users/admin/.android/build-cache/365012a67b8d3ff4e89b251da5c55ce3c8336801/output/res/layout/activity_blocks.xml"
+    },
+    {
+        "merged": "/Users/admin/Documents/4451-Rover_Ruckus/TeamCode/build/intermediates/res/merged/debug/layout/pwms.xml",
+        "source": "/Users/admin/.android/build-cache/465da1f086bcfebe3ed469f87cd0c39f01f0d80e/output/res/layout/pwms.xml"
+    },
+    {
+        "merged": "/Users/admin/Documents/4451-Rover_Ruckus/TeamCode/build/intermediates/res/merged/debug/layout/activity_ftc_controller.xml",
+        "source": "/Users/admin/Documents/4451-Rover_Ruckus/FtcRobotController/build/intermediates/bundles/default/res/layout/activity_ftc_controller.xml"
+    },
+    {
+        "merged": "/Users/admin/Documents/4451-Rover_Ruckus/TeamCode/build/intermediates/res/merged/debug/layout/activity_swap_usb_devices.xml",
+        "source": "/Users/admin/.android/build-cache/465da1f086bcfebe3ed469f87cd0c39f01f0d80e/output/res/layout/activity_swap_usb_devices.xml"
+    },
+    {
+        "merged": "/Users/admin/Documents/4451-Rover_Ruckus/TeamCode/build/intermediates/res/merged/debug/layout/feedback.xml",
+        "source": "/Users/admin/.android/build-cache/1c7dc98e7aa3317b15cbd71a7a6fcf01e88cc1f6/output/res/layout/feedback.xml"
+    }
+]

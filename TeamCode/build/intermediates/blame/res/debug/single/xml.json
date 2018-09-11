@@ -1,0 +1,42 @@
+[
+    {
+        "merged": "/Users/admin/Documents/4451-Rover_Ruckus/TeamCode/build/intermediates/res/merged/debug/xml/squarebot.xml",
+        "source": "/Users/admin/.android/build-cache/465da1f086bcfebe3ed469f87cd0c39f01f0d80e/output/res/xml/squarebot.xml"
+    },
+    {
+        "merged": "/Users/admin/Documents/4451-Rover_Ruckus/TeamCode/build/intermediates/res/merged/debug/xml/k9usbbot.xml",
+        "source": "/Users/admin/.android/build-cache/465da1f086bcfebe3ed469f87cd0c39f01f0d80e/output/res/xml/k9usbbot.xml"
+    },
+    {
+        "merged": "/Users/admin/Documents/4451-Rover_Ruckus/TeamCode/build/intermediates/res/merged/debug/xml/app_settings.xml",
+        "source": "/Users/admin/Documents/4451-Rover_Ruckus/FtcRobotController/build/intermediates/bundles/default/res/xml/app_settings.xml"
+    },
+    {
+        "merged": "/Users/admin/Documents/4451-Rover_Ruckus/TeamCode/build/intermediates/res/merged/debug/xml/advanced_rc_settings.xml",
+        "source": "/Users/admin/.android/build-cache/465da1f086bcfebe3ed469f87cd0c39f01f0d80e/output/res/xml/advanced_rc_settings.xml"
+    },
+    {
+        "merged": "/Users/admin/Documents/4451-Rover_Ruckus/TeamCode/build/intermediates/res/merged/debug/xml/pushbotsens.xml",
+        "source": "/Users/admin/.android/build-cache/465da1f086bcfebe3ed469f87cd0c39f01f0d80e/output/res/xml/pushbotsens.xml"
+    },
+    {
+        "merged": "/Users/admin/Documents/4451-Rover_Ruckus/TeamCode/build/intermediates/res/merged/debug/xml/pushbot.xml",
+        "source": "/Users/admin/.android/build-cache/465da1f086bcfebe3ed469f87cd0c39f01f0d80e/output/res/xml/pushbot.xml"
+    },
+    {
+        "merged": "/Users/admin/Documents/4451-Rover_Ruckus/TeamCode/build/intermediates/res/merged/debug/xml/maxmodules.xml",
+        "source": "/Users/admin/.android/build-cache/465da1f086bcfebe3ed469f87cd0c39f01f0d80e/output/res/xml/maxmodules.xml"
+    },
+    {
+        "merged": "/Users/admin/Documents/4451-Rover_Ruckus/TeamCode/build/intermediates/res/merged/debug/xml/k9legacybot.xml",
+        "source": "/Users/admin/.android/build-cache/465da1f086bcfebe3ed469f87cd0c39f01f0d80e/output/res/xml/k9legacybot.xml"
+    },
+    {
+        "merged": "/Users/admin/Documents/4451-Rover_Ruckus/TeamCode/build/intermediates/res/merged/debug/xml/device_filter.xml",
+        "source": "/Users/admin/Documents/4451-Rover_Ruckus/FtcRobotController/build/intermediates/bundles/default/res/xml/device_filter.xml"
+    },
+    {
+        "merged": "/Users/admin/Documents/4451-Rover_Ruckus/TeamCode/build/intermediates/res/merged/debug/xml/rev_scoot.xml",
+        "source": "/Users/admin/.android/build-cache/465da1f086bcfebe3ed469f87cd0c39f01f0d80e/output/res/xml/rev_scoot.xml"
+    }
+]

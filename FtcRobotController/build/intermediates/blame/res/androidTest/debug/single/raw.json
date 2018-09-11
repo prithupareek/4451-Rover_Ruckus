@@ -1,0 +1,46 @@
+[
+    {
+        "merged": "/Users/admin/Documents/4451-Rover_Ruckus/FtcRobotController/build/intermediates/res/merged/androidTest/debug/raw/cube_mesh_vertex_shader.glsl",
+        "source": "/Users/admin/.android/build-cache/1c7dc98e7aa3317b15cbd71a7a6fcf01e88cc1f6/output/res/raw/cube_mesh_vertex_shader.glsl"
+    },
+    {
+        "merged": "/Users/admin/Documents/4451-Rover_Ruckus/FtcRobotController/build/intermediates/res/merged/androidTest/debug/raw/texture_vertex_shader.glsl",
+        "source": "/Users/admin/.android/build-cache/1c7dc98e7aa3317b15cbd71a7a6fcf01e88cc1f6/output/res/raw/texture_vertex_shader.glsl"
+    },
+    {
+        "merged": "/Users/admin/Documents/4451-Rover_Ruckus/FtcRobotController/build/intermediates/res/merged/androidTest/debug/raw/errormessage.wav",
+        "source": "/Users/admin/.android/build-cache/465da1f086bcfebe3ed469f87cd0c39f01f0d80e/output/res/raw/errormessage.wav"
+    },
+    {
+        "merged": "/Users/admin/Documents/4451-Rover_Ruckus/FtcRobotController/build/intermediates/res/merged/androidTest/debug/raw/nxtstartupsound.wav",
+        "source": "/Users/admin/.android/build-cache/465da1f086bcfebe3ed469f87cd0c39f01f0d80e/output/res/raw/nxtstartupsound.wav"
+    },
+    {
+        "merged": "/Users/admin/Documents/4451-Rover_Ruckus/FtcRobotController/build/intermediates/res/merged/androidTest/debug/raw/color_fragment_shader.glsl",
+        "source": "/Users/admin/.android/build-cache/1c7dc98e7aa3317b15cbd71a7a6fcf01e88cc1f6/output/res/raw/color_fragment_shader.glsl"
+    },
+    {
+        "merged": "/Users/admin/Documents/4451-Rover_Ruckus/FtcRobotController/build/intermediates/res/merged/androidTest/debug/raw/simple_vertex_shader.glsl",
+        "source": "/Users/admin/.android/build-cache/1c7dc98e7aa3317b15cbd71a7a6fcf01e88cc1f6/output/res/raw/simple_vertex_shader.glsl"
+    },
+    {
+        "merged": "/Users/admin/Documents/4451-Rover_Ruckus/FtcRobotController/build/intermediates/res/merged/androidTest/debug/raw/texture_fragment_shader.glsl",
+        "source": "/Users/admin/.android/build-cache/1c7dc98e7aa3317b15cbd71a7a6fcf01e88cc1f6/output/res/raw/texture_fragment_shader.glsl"
+    },
+    {
+        "merged": "/Users/admin/Documents/4451-Rover_Ruckus/FtcRobotController/build/intermediates/res/merged/androidTest/debug/raw/chimedisconnect.wav",
+        "source": "/Users/admin/.android/build-cache/465da1f086bcfebe3ed469f87cd0c39f01f0d80e/output/res/raw/chimedisconnect.wav"
+    },
+    {
+        "merged": "/Users/admin/Documents/4451-Rover_Ruckus/FtcRobotController/build/intermediates/res/merged/androidTest/debug/raw/cube_mesh_fragment_shader.glsl",
+        "source": "/Users/admin/.android/build-cache/1c7dc98e7aa3317b15cbd71a7a6fcf01e88cc1f6/output/res/raw/cube_mesh_fragment_shader.glsl"
+    },
+    {
+        "merged": "/Users/admin/Documents/4451-Rover_Ruckus/FtcRobotController/build/intermediates/res/merged/androidTest/debug/raw/chimeconnect.wav",
+        "source": "/Users/admin/.android/build-cache/465da1f086bcfebe3ed469f87cd0c39f01f0d80e/output/res/raw/chimeconnect.wav"
+    },
+    {
+        "merged": "/Users/admin/Documents/4451-Rover_Ruckus/FtcRobotController/build/intermediates/res/merged/androidTest/debug/raw/warningmessage.wav",
+        "source": "/Users/admin/.android/build-cache/465da1f086bcfebe3ed469f87cd0c39f01f0d80e/output/res/raw/warningmessage.wav"
+    }
+]
