@@ -34,7 +34,7 @@ public class Hardware {
                 "1n2jYKkm";
         parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
 
-        VuforiaLocalizer vuforiaLocalizer = ClassFactory.createVuforiaLocalizer(parameters);
+        VuforiaLocalizer vuforiaLocalizer = ClassFactory.getInstance().createVuforia(parameters);
         navTargets = vuforiaLocalizer.loadTrackablesFromAsset("Rover-Ruckus");
 
         VuforiaTrackable frontTarget = navTargets.get(0);
