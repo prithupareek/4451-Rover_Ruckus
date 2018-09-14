@@ -16,6 +16,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 public class Hardware {
     private VuforiaTrackables navTargets;
+    private OpenGLMatrix lastPos;
 
     void initVuforia(Telemetry telemetry, HardwareMap hardwareMap) {
         telemetry.addLine("Initializing Vuforia");
@@ -96,7 +97,19 @@ public class Hardware {
                     .setPhoneInformation(phoneLocation, parameters.cameraDirection);
         }
 
+        navTargets.activate();
+
         telemetry.addLine("Initialized Vuforia");
         telemetry.update();
+    }
+
+    OpenGLMatrix getRobotLocation() {
+        for (VuforiaTrackable trackable : navTargets) {
+            OpenGLMatrix pos = ((VuforiaTrackableDefaultListener) trackable.getListener()).getUpdatedRobotLocation();
+            if (pos != null) {
+                lastPos = pos;
+            }
+        }
+        return lastPos;
     }
 }
