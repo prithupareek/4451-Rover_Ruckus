@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
@@ -15,10 +17,29 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefau
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 public class Hardware {
+    private HardwareMap hardwareMap;
+    private Telemetry telemetry;
+    private CRServo leftHarvester, rightHarvester;
+
     private VuforiaTrackables navTargets;
     private OpenGLMatrix lastPos;
 
-    void initVuforia(Telemetry telemetry, HardwareMap hardwareMap) {
+    Hardware(HardwareMap hardwareMap, Telemetry telemetry) {
+        this.hardwareMap = hardwareMap;
+        this.telemetry = telemetry;
+
+        leftHarvester = hardwareMap.crservo.get("leftHarvester");
+        rightHarvester = hardwareMap.crservo.get("rightHarvester");
+
+        rightHarvester.setDirection(DcMotorSimple.Direction.REVERSE);
+    }
+
+    void setHarvesterPower(double power) {
+        leftHarvester.setPower(power);
+        rightHarvester.setPower(power);
+    }
+
+    void initVuforia() {
         telemetry.addLine("Initializing Vuforia");
         telemetry.update();
 
