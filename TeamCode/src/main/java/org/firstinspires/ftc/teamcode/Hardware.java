@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -19,7 +20,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 public class Hardware {
     private HardwareMap hardwareMap;
     private Telemetry telemetry;
-    private CRServo leftHarvester, rightHarvester;
+
+    private DcMotor leftSlide, rightSlide;
+    private CRServo leftGrabber, rightGrabber;
 
     private VuforiaTrackables navTargets;
     private OpenGLMatrix lastPos;
@@ -28,15 +31,26 @@ public class Hardware {
         this.hardwareMap = hardwareMap;
         this.telemetry = telemetry;
 
-        leftHarvester = hardwareMap.crservo.get("leftHarvester");
-        rightHarvester = hardwareMap.crservo.get("rightHarvester");
+        leftSlide = hardwareMap.dcMotor.get("leftSlide");
+        rightSlide = hardwareMap.dcMotor.get("rightSlide");
+        leftGrabber = hardwareMap.crservo.get("leftGrabber");
+        rightGrabber = hardwareMap.crservo.get("rightGrabber");
 
-        rightHarvester.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        rightSlide.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightGrabber.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
-    void setHarvesterPower(double power) {
-        leftHarvester.setPower(power);
-        rightHarvester.setPower(power);
+    void setLinearSlidePower(float power) {
+        leftSlide.setPower(power);
+        rightSlide.setPower(power);
+    }
+
+    void setGrabberPower(double power) {
+        leftGrabber.setPower(power);
+        rightGrabber.setPower(power);
     }
 
     void initVuforia() {
@@ -56,7 +70,7 @@ public class Hardware {
         parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
 
         VuforiaLocalizer vuforiaLocalizer = ClassFactory.getInstance().createVuforia(parameters);
-        navTargets = vuforiaLocalizer.loadTrackablesFromAsset("Rover-Ruckus");
+        navTargets = vuforiaLocalizer.loadTrackablesFromAsset("RoverRuckus");
 
         VuforiaTrackable frontTarget = navTargets.get(0);
         VuforiaTrackable redTarget = navTargets.get(1);
@@ -69,7 +83,7 @@ public class Hardware {
         blueTarget.setName("BlueWall");
 
         OpenGLMatrix frontLocation = OpenGLMatrix
-                .translation(0, -72, 5.75f)
+                .translation(0, -1828.8f, 146.05f)
                 .multiplied(Orientation.getRotationMatrix(
                         AxesReference.EXTRINSIC, AxesOrder.XZX,
                         AngleUnit.DEGREES, 90, 180, 0
@@ -78,7 +92,7 @@ public class Hardware {
         telemetry.addData("Front Target", frontLocation.formatAsTransform());
 
         OpenGLMatrix redLocation = OpenGLMatrix
-                .translation(72, 0, 5.75f)
+                .translation(1828.8f, 0, 146.05f)
                 .multiplied(Orientation.getRotationMatrix(
                         AxesReference.EXTRINSIC, AxesOrder.XZX,
                         AngleUnit.DEGREES, 90, -90, 0
@@ -87,7 +101,7 @@ public class Hardware {
         telemetry.addData("Red Target", redLocation.formatAsTransform());
 
         OpenGLMatrix backLocation = OpenGLMatrix
-                .translation(0, 72, 5.75f)
+                .translation(0, 1828.8f, 146.05f)
                 .multiplied(Orientation.getRotationMatrix(
                         AxesReference.EXTRINSIC, AxesOrder.XZX,
                         AngleUnit.DEGREES, 90, 0, 0
@@ -96,7 +110,7 @@ public class Hardware {
         telemetry.addData("Back Target", backLocation.formatAsTransform());
 
         OpenGLMatrix blueLocation = OpenGLMatrix
-                .translation(-72, 0, 5.75f)
+                .translation(-1828.8f, 0, 146.05f)
                 .multiplied(Orientation.getRotationMatrix(
                         AxesReference.EXTRINSIC, AxesOrder.XZX,
                         AngleUnit.DEGREES, 90, 90, 0

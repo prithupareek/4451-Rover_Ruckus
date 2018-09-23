@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 @TeleOp
-public class HarvesterTest extends OpMode {
+public class GrabberTest extends OpMode {
     private Hardware hardware;
 
     @Override
@@ -14,6 +14,6 @@ public class HarvesterTest extends OpMode {
 
     @Override
     public void loop() {
-        hardware.setHarvesterPower(-gamepad1.right_stick_y);
+        hardware.setGrabberPower(-gamepad1.right_stick_y);
     }
 }
