@@ -21,6 +21,7 @@ public class Hardware {
     private HardwareMap hardwareMap;
     private Telemetry telemetry;
 
+    DcMotor frontLeft, frontRight, backLeft, backRight;
     private DcMotor leftSlide, rightSlide;
     private CRServo leftGrabber, rightGrabber;
 
@@ -31,16 +32,22 @@ public class Hardware {
         this.hardwareMap = hardwareMap;
         this.telemetry = telemetry;
 
-        leftSlide = hardwareMap.dcMotor.get("leftSlide");
-        rightSlide = hardwareMap.dcMotor.get("rightSlide");
-        leftGrabber = hardwareMap.crservo.get("leftGrabber");
+        frontLeft    = hardwareMap.dcMotor.get("frontLeft");
+        frontRight   = hardwareMap.dcMotor.get("frontRight");
+        backLeft     = hardwareMap.dcMotor.get("backLeft");
+        backRight    = hardwareMap.dcMotor.get("backRight");
+        leftSlide    = hardwareMap.dcMotor.get("leftSlide");
+        rightSlide   = hardwareMap.dcMotor.get("rightSlide");
+        leftGrabber  = hardwareMap.crservo.get("leftGrabber");
         rightGrabber = hardwareMap.crservo.get("rightGrabber");
 
-        leftSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftSlide    .setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightSlide   .setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        rightSlide.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightGrabber.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontLeft    .setDirection(DcMotorSimple.Direction.REVERSE);
+        backLeft     .setDirection(DcMotorSimple.Direction.REVERSE);
+        rightSlide   .setDirection(DcMotorSimple.Direction.REVERSE);
+        rightGrabber .setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
     void setLinearSlidePower(float power) {
