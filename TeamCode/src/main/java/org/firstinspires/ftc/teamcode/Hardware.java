@@ -46,8 +46,10 @@ public class Hardware {
 
         frontLeft    .setDirection(DcMotorSimple.Direction.REVERSE);
         backLeft     .setDirection(DcMotorSimple.Direction.REVERSE);
-        rightSlide   .setDirection(DcMotorSimple.Direction.REVERSE);
-        rightGrabber .setDirection(DcMotorSimple.Direction.REVERSE);
+        // The rightSlide motor turns the wrong direction (I think because of the gear box) so this
+        // is commented out. It will be a problem if we use encoders.
+        // rightSlide.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightGrabber.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
     void setLinearSlidePower(float power) {
