@@ -1,27 +1,17 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.*;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+import org.firstinspires.ftc.robotcore.external.navigation.*;
 
 public class Hardware {
     private HardwareMap hardwareMap;
     private Telemetry telemetry;
 
-    DcMotor frontLeft, frontRight, backLeft, backRight;
+    DcMotor frontLeft, frontRight, backLeft, backRight, arm, elbow;
     private DcMotor leftSlide, rightSlide;
     private CRServo leftGrabber, rightGrabber;
 
@@ -36,16 +26,31 @@ public class Hardware {
         frontRight   = hardwareMap.dcMotor.get("frontRight");
         backLeft     = hardwareMap.dcMotor.get("backLeft");
         backRight    = hardwareMap.dcMotor.get("backRight");
+        arm          = hardwareMap.dcMotor.get("arm");
+        elbow        = hardwareMap.dcMotor.get("elbow");
         leftSlide    = hardwareMap.dcMotor.get("leftSlide");
         rightSlide   = hardwareMap.dcMotor.get("rightSlide");
         leftGrabber  = hardwareMap.crservo.get("leftGrabber");
         rightGrabber = hardwareMap.crservo.get("rightGrabber");
 
-        leftSlide    .setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightSlide   .setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        frontLeft  .setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontRight .setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backLeft   .setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backRight  .setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        arm        .setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        elbow      .setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftSlide  .setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightSlide .setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        frontLeft    .setDirection(DcMotorSimple.Direction.REVERSE);
-        backLeft     .setDirection(DcMotorSimple.Direction.REVERSE);
+        leftSlide  .setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightSlide .setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        arm        .setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        elbow      .setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        frontLeft  .setDirection(DcMotorSimple.Direction.REVERSE);
+        backLeft   .setDirection(DcMotorSimple.Direction.REVERSE);
+        elbow      .setDirection(DcMotorSimple.Direction.REVERSE);
+
         // The rightSlide motor turns the wrong direction (I think because of the gear box) so this
         // is commented out. It will be a problem if we use encoders.
         // rightSlide.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -82,59 +87,61 @@ public class Hardware {
         navTargets = vuforiaLocalizer.loadTrackablesFromAsset("RoverRuckus");
 
         VuforiaTrackable frontTarget = navTargets.get(0);
-        VuforiaTrackable redTarget = navTargets.get(1);
-        VuforiaTrackable backTarget = navTargets.get(2);
-        VuforiaTrackable blueTarget = navTargets.get(3);
+        VuforiaTrackable redTarget   = navTargets.get(1);
+        VuforiaTrackable backTarget  = navTargets.get(2);
+        VuforiaTrackable blueTarget  = navTargets.get(3);
 
-        frontTarget.setName("FrontWall");
-        redTarget.setName("RedWall");
-        backTarget.setName("BackWall");
-        blueTarget.setName("BlueWall");
+        frontTarget .setName("FrontWall");
+        redTarget   .setName("RedWall");
+        backTarget  .setName("BackWall");
+        blueTarget  .setName("BlueWall");
 
-        OpenGLMatrix frontLocation = OpenGLMatrix
-                .translation(0, -1828.8f, 146.05f)
+        final float mmPerInch = 25.4f;
+        final float fieldWidth = 72 * mmPerInch;
+        final float targetHeight = 6 * mmPerInch;
+
+        frontTarget.setLocation(OpenGLMatrix
+                .translation(0, -fieldWidth, targetHeight)
                 .multiplied(Orientation.getRotationMatrix(
-                        AxesReference.EXTRINSIC, AxesOrder.XZX,
-                        AngleUnit.DEGREES, 90, 180, 0
-                ));
-        frontTarget.setLocation(frontLocation);
-        telemetry.addData("Front Target", frontLocation.formatAsTransform());
+                        AxesReference.EXTRINSIC, AxesOrder.XYZ,
+                        AngleUnit.DEGREES, 90, 0, 180
+                )));
 
-        OpenGLMatrix redLocation = OpenGLMatrix
-                .translation(1828.8f, 0, 146.05f)
+        redTarget.setLocation(OpenGLMatrix
+                .translation(fieldWidth, 0, targetHeight)
                 .multiplied(Orientation.getRotationMatrix(
-                        AxesReference.EXTRINSIC, AxesOrder.XZX,
-                        AngleUnit.DEGREES, 90, -90, 0
-                ));
-        redTarget.setLocation(redLocation);
-        telemetry.addData("Red Target", redLocation.formatAsTransform());
+                        AxesReference.EXTRINSIC, AxesOrder.XYZ,
+                        AngleUnit.DEGREES, 90, 0, -90
+                )));
 
-        OpenGLMatrix backLocation = OpenGLMatrix
-                .translation(0, 1828.8f, 146.05f)
+        backTarget.setLocation(OpenGLMatrix
+                .translation(0, fieldWidth, targetHeight)
                 .multiplied(Orientation.getRotationMatrix(
-                        AxesReference.EXTRINSIC, AxesOrder.XZX,
+                        AxesReference.EXTRINSIC, AxesOrder.XYZ,
                         AngleUnit.DEGREES, 90, 0, 0
-                ));
-        backTarget.setLocation(backLocation);
-        telemetry.addData("Back Target", backLocation.formatAsTransform());
+                )));
 
-        OpenGLMatrix blueLocation = OpenGLMatrix
-                .translation(-1828.8f, 0, 146.05f)
+        blueTarget.setLocation(OpenGLMatrix
+                .translation(-fieldWidth, 0, targetHeight)
                 .multiplied(Orientation.getRotationMatrix(
-                        AxesReference.EXTRINSIC, AxesOrder.XZX,
-                        AngleUnit.DEGREES, 90, 90, 0
-                ));
-        blueTarget.setLocation(blueLocation);
-        telemetry.addData("Blue Target", blueLocation.formatAsTransform());
+                        AxesReference.EXTRINSIC, AxesOrder.XYZ,
+                        AngleUnit.DEGREES, 90, 0, 90
+                )));
+
+        for (VuforiaTrackable navTarget : navTargets) {
+            telemetry.addData(navTarget.getName(), navTarget.getLocation().formatAsTransform());
+        }
 
         // TODO Phone location when the robot is built
         OpenGLMatrix phoneLocation = OpenGLMatrix
                 .translation(0, 0, 0)
                 .multiplied(Orientation.getRotationMatrix(
-                        AxesReference.EXTRINSIC, AxesOrder.XZX,
+                        AxesReference.EXTRINSIC, AxesOrder.XYZ,
                         AngleUnit.DEGREES, 0, 0, 0
                 ));
         telemetry.addData("Phone", phoneLocation.formatAsTransform());
+
+        telemetry.update();
 
         for (VuforiaTrackable target : navTargets) {
             ((VuforiaTrackableDefaultListener) target.getListener())
@@ -148,11 +155,21 @@ public class Hardware {
     }
 
     OpenGLMatrix getRobotLocation() {
+        VuforiaTrackable visible = null;
         for (VuforiaTrackable trackable : navTargets) {
-            OpenGLMatrix pos = ((VuforiaTrackableDefaultListener) trackable.getListener()).getUpdatedRobotLocation();
-            if (pos != null) {
-                lastPos = pos;
+            if (((VuforiaTrackableDefaultListener) trackable.getListener()).isVisible()) {
+                visible = trackable;
+                break;
             }
+        }
+
+        if (visible == null) {
+            return null;
+        }
+
+        OpenGLMatrix pos = ((VuforiaTrackableDefaultListener) visible.getListener()).getUpdatedRobotLocation();
+        if (pos != null) {
+            lastPos = pos;
         }
         return lastPos;
     }

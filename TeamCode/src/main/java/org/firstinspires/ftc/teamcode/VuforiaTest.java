@@ -22,7 +22,7 @@ public class VuforiaTest extends OpMode {
     @Override
     public void loop() {
         OpenGLMatrix robotPos = hardware.getRobotLocation();
-        telemetry.addData("Robot", robotPos == null ? "null" : robotPos.formatAsTransform());
+        telemetry.addData("Robot", robotPos == null ? "No targets visible" : robotPos.formatAsTransform());
         telemetry.update();
     }
 }

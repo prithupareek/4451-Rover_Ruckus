@@ -6,8 +6,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 @TeleOp
 public class Driving extends OpMode {
     private Hardware hardware;
-    private double speed = 1;
-    private boolean prevX = false;
+    private double speed = .8;
+    private boolean prevA = false;
 
     @Override
     public void init() {
@@ -16,7 +16,7 @@ public class Driving extends OpMode {
 
     @Override
     public void loop() {
-        if (gamepad1.x && !prevX) {
+        if (gamepad1.a && !prevA) {
             speed *= -1;
         }
 
@@ -25,6 +25,7 @@ public class Driving extends OpMode {
         double y = -gamepad1.left_stick_y;
         double turn = gamepad1.right_stick_x;
 
+        // Normalize x, y, and turn
         if (Math.abs(x) + Math.abs(y) + Math.abs(turn) != 0) {
             double max = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
             if (Math.abs(turn) > max) {
@@ -42,10 +43,26 @@ public class Driving extends OpMode {
         hardware.backLeft   .setPower(-x + y + turn);
         hardware.backRight  .setPower( x + y - turn);
 
-        hardware.setGrabberPower(-gamepad2.left_stick_y);
-        hardware.setLinearSlidePower(-gamepad2.right_stick_y);
+        // Grabber
+        if (gamepad2.left_trigger != 0) {
+            hardware.setGrabberPower(gamepad2.left_trigger);
+        } else {
+            hardware.setGrabberPower(-gamepad2.right_trigger);
+        }
+
+        // Linear slide
+        if (gamepad2.dpad_up) {
+            hardware.setLinearSlidePower(1);
+        }
+        if (gamepad2.dpad_down) {
+            hardware.setLinearSlidePower(-1);
+        }
+
+        // Arm and elbow
+        hardware.arm.setPower(-gamepad2.left_stick_y);
+        hardware.elbow.setPower(-gamepad2.right_stick_y);
 
 
-        prevX = gamepad1.x;
+        prevA = gamepad1.a;
     }
 }
