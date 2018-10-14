@@ -15,6 +15,12 @@ public class Driving extends OpMode {
     }
 
     @Override
+    public void start() {
+        hardware.arm.setPower(.5);
+        hardware.elbow.setPower(.5);
+    }
+
+    @Override
     public void loop() {
         if (gamepad1.a && !prevA) {
             speed *= -1;
@@ -35,7 +41,7 @@ public class Driving extends OpMode {
             double multiplier = max / (Math.abs(x) + Math.abs(y) + Math.abs(turn));
             x    *= multiplier * speed;
             y    *= multiplier * speed;
-            turn *= multiplier * speed;
+            turn *= multiplier * Math.abs(speed);
         }
 
         hardware.frontLeft  .setPower( x + y + turn);
@@ -53,16 +59,18 @@ public class Driving extends OpMode {
         // Linear slide
         if (gamepad2.dpad_up) {
             hardware.setLinearSlidePower(1);
-        }
-        if (gamepad2.dpad_down) {
+        } else if (gamepad2.dpad_down) {
             hardware.setLinearSlidePower(-1);
+        } else {
+            hardware.setLinearSlidePower(0);
         }
 
         // Arm and elbow
-        hardware.arm.setPower(-gamepad2.left_stick_y);
-        hardware.elbow.setPower(-gamepad2.right_stick_y);
+        hardware.increaseArmPos(-gamepad2.left_stick_y / 2);
+        hardware.increaseElbowPos(-gamepad2.right_stick_y);
 
 
         prevA = gamepad1.a;
+        telemetry.update();
     }
 }

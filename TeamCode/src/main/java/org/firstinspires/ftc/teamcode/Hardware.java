@@ -15,6 +15,8 @@ public class Hardware {
     private DcMotor leftSlide, rightSlide;
     private CRServo leftGrabber, rightGrabber;
 
+    private double armTarget, elbowTarget;
+
     private VuforiaTrackables navTargets;
     private OpenGLMatrix lastPos;
 
@@ -33,14 +35,22 @@ public class Hardware {
         leftGrabber  = hardwareMap.crservo.get("leftGrabber");
         rightGrabber = hardwareMap.crservo.get("rightGrabber");
 
+        frontLeft  .setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontRight .setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backLeft   .setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backRight  .setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        arm        .setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        elbow      .setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
         frontLeft  .setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         frontRight .setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backLeft   .setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backRight  .setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        arm        .setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        elbow      .setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        leftSlide  .setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightSlide .setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        arm        .setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        elbow      .setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        armTarget = arm.getCurrentPosition();
+        elbowTarget = elbow.getCurrentPosition();
 
         leftSlide  .setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightSlide .setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -49,11 +59,11 @@ public class Hardware {
 
         frontLeft  .setDirection(DcMotorSimple.Direction.REVERSE);
         backLeft   .setDirection(DcMotorSimple.Direction.REVERSE);
-        elbow      .setDirection(DcMotorSimple.Direction.REVERSE);
 
-        // The rightSlide motor turns the wrong direction (I think because of the gear box) so this
-        // is commented out. It will be a problem if we use encoders.
-        // rightSlide.setDirection(DcMotorSimple.Direction.REVERSE);
+        // The rightSlide motor turns the wrong direction (I think because of the gear box) so
+        // it's reversed. It will be a problem if we use encoders.
+        rightSlide.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftSlide.setDirection(DcMotorSimple.Direction.REVERSE);
         rightGrabber.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
@@ -65,6 +75,20 @@ public class Hardware {
     void setGrabberPower(double power) {
         leftGrabber.setPower(power);
         rightGrabber.setPower(power);
+    }
+
+    void increaseArmPos(double move) {
+        armTarget += move;
+        arm.setTargetPosition((int) armTarget);
+        telemetry.addData("armTarget", armTarget);
+        telemetry.addData("armPos", arm.getCurrentPosition());
+    }
+
+    void increaseElbowPos(double move) {
+        elbowTarget += move;
+        elbow.setTargetPosition((int) elbowTarget);
+        telemetry.addData("elbowTarget", elbowTarget);
+        telemetry.addData("elbowPos", elbow.getCurrentPosition());
     }
 
     void initVuforia() {
