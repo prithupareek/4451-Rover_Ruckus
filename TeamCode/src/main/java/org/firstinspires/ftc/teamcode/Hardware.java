@@ -11,8 +11,7 @@ public class Hardware {
     private HardwareMap hardwareMap;
     private Telemetry telemetry;
 
-    DcMotor frontLeft, frontRight, backLeft, backRight, arm, elbow;
-    private DcMotor leftSlide, rightSlide;
+    private DcMotor frontLeft, frontRight, backLeft, backRight, slide, arm, elbow;
     private CRServo leftGrabber, rightGrabber;
 
     private double armTarget, elbowTarget;
@@ -30,8 +29,7 @@ public class Hardware {
         backRight    = hardwareMap.dcMotor.get("backRight");
         arm          = hardwareMap.dcMotor.get("arm");
         elbow        = hardwareMap.dcMotor.get("elbow");
-        leftSlide    = hardwareMap.dcMotor.get("leftSlide");
-        rightSlide   = hardwareMap.dcMotor.get("rightSlide");
+        slide        = hardwareMap.dcMotor.get("slide");
         leftGrabber  = hardwareMap.crservo.get("leftGrabber");
         rightGrabber = hardwareMap.crservo.get("rightGrabber");
 
@@ -39,6 +37,7 @@ public class Hardware {
         frontRight .setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backLeft   .setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backRight  .setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        slide      .setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         arm        .setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         elbow      .setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
@@ -46,30 +45,32 @@ public class Hardware {
         frontRight .setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backLeft   .setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backRight  .setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        slide      .setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         arm        .setMode(DcMotor.RunMode.RUN_TO_POSITION);
         elbow      .setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         armTarget = arm.getCurrentPosition();
         elbowTarget = elbow.getCurrentPosition();
 
-        leftSlide  .setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightSlide .setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        arm        .setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        elbow      .setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        slide .setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        arm   .setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        elbow .setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        frontLeft  .setDirection(DcMotorSimple.Direction.REVERSE);
-        backLeft   .setDirection(DcMotorSimple.Direction.REVERSE);
-
-        // The rightSlide motor turns the wrong direction (I think because of the gear box) so
-        // it's reversed. It will be a problem if we use encoders.
-        rightSlide.setDirection(DcMotorSimple.Direction.REVERSE);
-        leftSlide.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightGrabber.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontRight   .setDirection(DcMotorSimple.Direction.REVERSE);
+        backRight    .setDirection(DcMotorSimple.Direction.REVERSE);
+        elbow        .setDirection(DcMotorSimple.Direction.REVERSE);
+        rightGrabber .setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
-    void setLinearSlidePower(float power) {
-        leftSlide.setPower(power);
-        rightSlide.setPower(power);
+    void setWheelsVector(double x, double y, double turn) {
+        frontLeft  .setPower( x + y + turn);
+        frontRight .setPower(-x + y - turn);
+        backLeft   .setPower(-x + y + turn);
+        backRight  .setPower( x + y - turn);
+    }
+
+    void setLinearSlidePower(double power) {
+        slide.setPower(power);
     }
 
     void setGrabberPower(double power) {
@@ -77,11 +78,19 @@ public class Hardware {
         rightGrabber.setPower(power);
     }
 
+    void setArmPower(double power) {
+        arm.setPower(power);
+    }
+
     void increaseArmPos(double move) {
         armTarget += move;
         arm.setTargetPosition((int) armTarget);
         telemetry.addData("armTarget", armTarget);
         telemetry.addData("armPos", arm.getCurrentPosition());
+    }
+
+    void setElbowPower(double power) {
+        elbow.setPower(power);
     }
 
     void increaseElbowPos(double move) {
