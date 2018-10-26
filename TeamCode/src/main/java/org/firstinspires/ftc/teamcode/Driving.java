@@ -8,7 +8,9 @@ public class Driving extends OpMode {
     private Hardware hardware;
     private double speed = .5;
     private boolean reverse = false;
-    private boolean prevA = false;
+    private boolean limp = false;
+    private boolean prevX1 = false;
+    private boolean prevX2 = false;
 
     @Override
     public void init() {
@@ -17,9 +19,13 @@ public class Driving extends OpMode {
 
     @Override
     public void loop() {
-        if (gamepad1.a && !prevA) {
+        // Wheels
+        // Reversing
+        if (gamepad1.x && !prevX1) {
             reverse = !reverse;
         }
+        prevX1 = gamepad1.x;
+        telemetry.addData("reverse", reverse);
 
         // Change wheel speed
         if (gamepad1.dpad_up) {
@@ -32,10 +38,10 @@ public class Driving extends OpMode {
             speed = .2;
         }
 
-        // Wheels
-        double x = gamepad1.left_stick_x * speed * (reverse ? 1 : -1);
-        double y = -gamepad1.left_stick_y * speed * (reverse ? 1 : -1);
-        double turn = gamepad1.right_stick_x * Math.abs(speed) * (reverse ? 1 : -1);
+        // Vector components
+        double x = gamepad1.left_stick_x * speed * (reverse ? -1 : 1);
+        double y = -gamepad1.left_stick_y * speed * (reverse ? -1 : 1);
+        double turn = gamepad1.right_stick_x * speed;
 
         // Normalize x, y, and turn
         if (Math.abs(x) + Math.abs(y) + Math.abs(turn) != 0) {
@@ -50,7 +56,7 @@ public class Driving extends OpMode {
             turn *= multiplier;
         }
 
-        hardware.setWheelsVector( x, y, turn);
+        hardware.setWheelsVector(x, y, turn);
 
         // Grabber
         if (gamepad2.left_trigger != 0) {
@@ -69,14 +75,28 @@ public class Driving extends OpMode {
         }
 
         // Arm and elbow
-        hardware.setArmPower(.5);
-        hardware.setElbowPower(.5);
+        // Going limp
+        if (gamepad2.x && !prevX2) {
+            limp = !limp;
+            if (!limp) {
+                hardware.resetArmElbow();
+            }
+        }
+        prevX2 = gamepad2.x;
+        telemetry.addData("limp", limp);
+
+        if (limp) {
+            hardware.setArmPower(0);
+            hardware.setElbowPower(0);
+        } else {
+            hardware.setArmPower(.5);
+            hardware.setElbowPower(.5);
+        }
 
         hardware.increaseArmPos(-gamepad2.left_stick_y * 2.5);
         hardware.increaseElbowPos(-gamepad2.right_stick_y);
 
 
-        prevA = gamepad1.a;
         telemetry.update();
     }
 }

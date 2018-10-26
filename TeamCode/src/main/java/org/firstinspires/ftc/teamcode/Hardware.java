@@ -63,10 +63,10 @@ public class Hardware {
     }
 
     void setWheelsVector(double x, double y, double turn) {
-        frontLeft  .setPower( x + y + turn);
-        frontRight .setPower(-x + y - turn);
-        backLeft   .setPower(-x + y + turn);
-        backRight  .setPower( x + y - turn);
+        frontLeft  .setPower( x + y - turn);
+        frontRight .setPower(-x + y + turn);
+        backLeft   .setPower(-x + y - turn);
+        backRight  .setPower( x + y + turn);
     }
 
     void setLinearSlidePower(double power) {
@@ -84,6 +84,15 @@ public class Hardware {
 
     void increaseArmPos(double move) {
         armTarget += move;
+        if (armTarget - arm.getCurrentPosition() > 72) {
+            armTarget = arm.getCurrentPosition() + 72;
+        }
+        if (arm.getCurrentPosition() - armTarget > 72) {
+            armTarget = arm.getCurrentPosition() - 72;
+        }
+        if (armTarget < 0) {
+            armTarget = 0;
+        }
         arm.setTargetPosition((int) armTarget);
         telemetry.addData("armTarget", armTarget);
         telemetry.addData("armPos", arm.getCurrentPosition());
@@ -95,9 +104,27 @@ public class Hardware {
 
     void increaseElbowPos(double move) {
         elbowTarget += move;
+        if (elbowTarget - elbow.getCurrentPosition() > 72) {
+            elbowTarget = elbow.getCurrentPosition() + 72;
+        }
+        if (elbow.getCurrentPosition() - elbowTarget > 72) {
+            elbowTarget = elbow.getCurrentPosition() - 72;
+        }
+        if (elbowTarget < 0) {
+            elbowTarget = 0;
+        }
         elbow.setTargetPosition((int) elbowTarget);
         telemetry.addData("elbowTarget", elbowTarget);
         telemetry.addData("elbowPos", elbow.getCurrentPosition());
+    }
+
+    void resetArmElbow() {
+        armTarget = arm.getCurrentPosition();
+        elbowTarget = elbow.getCurrentPosition();
+        arm.setTargetPosition((int) armTarget);
+        elbow.setTargetPosition((int) elbowTarget);
+        arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        elbow.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
     void initVuforia() {
