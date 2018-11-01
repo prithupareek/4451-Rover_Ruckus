@@ -13,6 +13,7 @@ public class Hardware {
 
     private DcMotor frontLeft, frontRight, backLeft, backRight, slide, arm, elbow;
     private CRServo leftGrabber, rightGrabber;
+    private Servo door;
 
     private double armTarget, elbowTarget;
 
@@ -32,6 +33,7 @@ public class Hardware {
         slide        = hardwareMap.dcMotor.get("slide");
         leftGrabber  = hardwareMap.crservo.get("leftGrabber");
         rightGrabber = hardwareMap.crservo.get("rightGrabber");
+        door         = hardwareMap.servo.get("door");
 
         frontLeft  .setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         frontRight .setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -56,17 +58,17 @@ public class Hardware {
         arm   .setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         elbow .setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        frontRight   .setDirection(DcMotorSimple.Direction.REVERSE);
-        backRight    .setDirection(DcMotorSimple.Direction.REVERSE);
+        frontLeft    .setDirection(DcMotorSimple.Direction.REVERSE);
+        backLeft     .setDirection(DcMotorSimple.Direction.REVERSE);
         elbow        .setDirection(DcMotorSimple.Direction.REVERSE);
         rightGrabber .setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
     void setWheelsVector(double x, double y, double turn) {
-        frontLeft  .setPower( x + y - turn);
-        frontRight .setPower(-x + y + turn);
-        backLeft   .setPower(-x + y - turn);
-        backRight  .setPower( x + y + turn);
+        frontLeft  .setPower( x + y + turn);
+        frontRight .setPower(-x + y - turn);
+        backLeft   .setPower(-x + y + turn);
+        backRight  .setPower( x + y - turn);
     }
 
     void setLinearSlidePower(double power) {
@@ -83,19 +85,17 @@ public class Hardware {
     }
 
     void increaseArmPos(double move) {
-        armTarget += move;
-        if (armTarget - arm.getCurrentPosition() > 72) {
-            armTarget = arm.getCurrentPosition() + 72;
+        armTarget += move * 10;
+        if (armTarget - arm.getCurrentPosition() > 280) {
+            armTarget = arm.getCurrentPosition() + 280;
         }
-        if (arm.getCurrentPosition() - armTarget > 72) {
-            armTarget = arm.getCurrentPosition() - 72;
-        }
-        if (armTarget < 0) {
-            armTarget = 0;
+        if (arm.getCurrentPosition() - armTarget > 280) {
+            armTarget = arm.getCurrentPosition() - 280;
         }
         arm.setTargetPosition((int) armTarget);
-        telemetry.addData("armTarget", armTarget);
-        telemetry.addData("armPos", arm.getCurrentPosition());
+        telemetry.addData("Arm Target", armTarget);
+        telemetry.addData("Arm Pos", arm.getCurrentPosition());
+        telemetry.addData("Arm Diff", arm.getCurrentPosition() - armTarget);
     }
 
     void setElbowPower(double power) {
@@ -103,19 +103,17 @@ public class Hardware {
     }
 
     void increaseElbowPos(double move) {
-        elbowTarget += move;
+        elbowTarget += move * 3;
         if (elbowTarget - elbow.getCurrentPosition() > 72) {
             elbowTarget = elbow.getCurrentPosition() + 72;
         }
         if (elbow.getCurrentPosition() - elbowTarget > 72) {
             elbowTarget = elbow.getCurrentPosition() - 72;
         }
-        if (elbowTarget < 0) {
-            elbowTarget = 0;
-        }
         elbow.setTargetPosition((int) elbowTarget);
-        telemetry.addData("elbowTarget", elbowTarget);
-        telemetry.addData("elbowPos", elbow.getCurrentPosition());
+        telemetry.addData("Elbow Target", elbowTarget);
+        telemetry.addData("Elbow Pos", elbow.getCurrentPosition());
+        telemetry.addData("Elbow Diff", elbow.getCurrentPosition() - elbowTarget);
     }
 
     void resetArmElbow() {
@@ -123,8 +121,16 @@ public class Hardware {
         elbowTarget = elbow.getCurrentPosition();
         arm.setTargetPosition((int) armTarget);
         elbow.setTargetPosition((int) elbowTarget);
-        arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        elbow.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        setArmElbowMode(DcMotor.RunMode.RUN_TO_POSITION);
+    }
+
+    void setArmElbowMode(DcMotor.RunMode mode) {
+        arm.setMode(mode);
+        elbow.setMode(mode);
+    }
+
+    void setDoorPosition(double position) {
+        door.setPosition(position);
     }
 
     void initVuforia() {

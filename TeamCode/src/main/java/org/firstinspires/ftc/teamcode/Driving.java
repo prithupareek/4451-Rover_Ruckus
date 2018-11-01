@@ -2,15 +2,18 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 @TeleOp
 public class Driving extends OpMode {
     private Hardware hardware;
     private double speed = .5;
-    private boolean reverse = false;
-    private boolean limp = false;
-    private boolean prevX1 = false;
-    private boolean prevX2 = false;
+    private boolean reverse;
+    private boolean power;
+    private boolean doorOpen;
+    private boolean prevX1;
+    private boolean prevX2;
+    private boolean prevY2;
 
     @Override
     public void init() {
@@ -25,7 +28,7 @@ public class Driving extends OpMode {
             reverse = !reverse;
         }
         prevX1 = gamepad1.x;
-        telemetry.addData("reverse", reverse);
+        telemetry.addData("Reverse", reverse);
 
         // Change wheel speed
         if (gamepad1.dpad_up) {
@@ -75,19 +78,21 @@ public class Driving extends OpMode {
         }
 
         // Arm and elbow
-        // Going limp
+        // Power mode
         if (gamepad2.x && !prevX2) {
-            limp = !limp;
-            if (!limp) {
+            power = !power;
+            if (power) {
+                hardware.setArmElbowMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            } else {
                 hardware.resetArmElbow();
             }
         }
         prevX2 = gamepad2.x;
-        telemetry.addData("limp", limp);
+        telemetry.addData("Power", power);
 
-        if (limp) {
-            hardware.setArmPower(0);
-            hardware.setElbowPower(0);
+        if (power) {
+            hardware.setArmPower(-gamepad2.left_stick_y);
+            hardware.setElbowPower(-gamepad2.right_stick_y);
         } else {
             hardware.setArmPower(.5);
             hardware.setElbowPower(.5);
@@ -95,6 +100,14 @@ public class Driving extends OpMode {
 
         hardware.increaseArmPos(-gamepad2.left_stick_y * 2.5);
         hardware.increaseElbowPos(-gamepad2.right_stick_y);
+
+        // Door
+        if (gamepad2.y && !prevY2) {
+            doorOpen = !doorOpen;
+        }
+        telemetry.addData("Door Open", doorOpen);
+        hardware.setDoorPosition(doorOpen ? 1 : .5);
+        prevY2 = gamepad2.y;
 
 
         telemetry.update();
