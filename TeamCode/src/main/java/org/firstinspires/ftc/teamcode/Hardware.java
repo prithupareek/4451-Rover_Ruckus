@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.graphics.Color;
+
 import com.qualcomm.robotcore.hardware.*;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
@@ -7,13 +9,16 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.navigation.*;
 
+import java.util.Arrays;
+
 public class Hardware {
     private HardwareMap hardwareMap;
     private Telemetry telemetry;
 
     private DcMotor frontLeft, frontRight, backLeft, backRight, slide, arm, elbow;
     private CRServo leftGrabber, rightGrabber;
-    private Servo door;
+    private Servo door, sampler;
+    private ColorSensor colorSensor;
 
     private double armTarget, elbowTarget;
 
@@ -34,6 +39,8 @@ public class Hardware {
         leftGrabber  = hardwareMap.crservo.get("leftGrabber");
         rightGrabber = hardwareMap.crservo.get("rightGrabber");
         door         = hardwareMap.servo.get("door");
+        sampler      = hardwareMap.servo.get("sampler");
+        colorSensor  = hardwareMap.colorSensor.get("colorSensor");
 
         frontLeft  .setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         frontRight .setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -54,12 +61,15 @@ public class Hardware {
         armTarget = arm.getCurrentPosition();
         elbowTarget = elbow.getCurrentPosition();
 
+        colorSensor.enableLed(true);
+
         slide .setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         arm   .setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         elbow .setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         frontLeft    .setDirection(DcMotorSimple.Direction.REVERSE);
         backLeft     .setDirection(DcMotorSimple.Direction.REVERSE);
+        slide        .setDirection(DcMotorSimple.Direction.REVERSE);
         elbow        .setDirection(DcMotorSimple.Direction.REVERSE);
         rightGrabber .setDirection(DcMotorSimple.Direction.REVERSE);
     }
@@ -116,21 +126,58 @@ public class Hardware {
         telemetry.addData("Elbow Diff", elbow.getCurrentPosition() - elbowTarget);
     }
 
-    void resetArmElbow() {
+    void resetArm() {
         armTarget = arm.getCurrentPosition();
-        elbowTarget = elbow.getCurrentPosition();
         arm.setTargetPosition((int) armTarget);
-        elbow.setTargetPosition((int) elbowTarget);
-        setArmElbowMode(DcMotor.RunMode.RUN_TO_POSITION);
+        setElbowMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
-    void setArmElbowMode(DcMotor.RunMode mode) {
+    void resetElbow() {
+        elbowTarget = elbow.getCurrentPosition();
+        elbow.setTargetPosition((int) elbowTarget);
+        setElbowMode(DcMotor.RunMode.RUN_TO_POSITION);
+    }
+
+    void setArmMode(DcMotor.RunMode mode) {
         arm.setMode(mode);
+    }
+
+    void setElbowMode(DcMotor.RunMode mode) {
         elbow.setMode(mode);
     }
 
     void setDoorPosition(double position) {
         door.setPosition(position);
+    }
+
+    void setWheelZeroPowerBehavior(DcMotor.ZeroPowerBehavior behavior) {
+        frontLeft  .setZeroPowerBehavior(behavior);
+        frontRight .setZeroPowerBehavior(behavior);
+        backLeft   .setZeroPowerBehavior(behavior);
+        backRight  .setZeroPowerBehavior(behavior);
+    }
+
+    void argbTelemetry() {
+        telemetry.addData("ARGB", colorSensor.alpha() + ", " + colorSensor.red()
+                + ", " + colorSensor.green() + ", " + colorSensor.blue());
+    }
+
+    void hsvTelemetry() {
+        telemetry.addData("HSV", Arrays.toString(getHSV()));
+    }
+
+    void setSamplerPos(double position) {
+        sampler.setPosition(position);
+    }
+
+    private float[] getHSV() {
+        float[] hsv = new float[3];
+        Color.RGBToHSV(colorSensor.red(), colorSensor.green(), colorSensor.blue(), hsv);
+        return hsv;
+    }
+
+    boolean isYellow() {
+        return getHSV()[0] < 27;
     }
 
     void initVuforia() {
