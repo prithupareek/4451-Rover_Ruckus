@@ -176,8 +176,6 @@ public class Driving extends OpMode {
         prevR2 = gamepad2.right_stick_button;
 
         // Telemetry
-        telemetry.addData("Slide Pos", hardware.slide.getCurrentPosition());
-
         telemetry.addData("Reverse", reverse);
         telemetry.addData("Brakes", brakes);
         telemetry.addData("Arm Power", armPower);

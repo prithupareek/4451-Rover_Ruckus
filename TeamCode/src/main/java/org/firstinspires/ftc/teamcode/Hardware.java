@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode;
 import android.graphics.Color;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -15,7 +14,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.*;
 import java.util.Arrays;
 
 public class Hardware {
-    private final static double MM_PER_COUNT = .27125;
+    private final static double COUNTS_PER_MM = 800 / 217;
+    // TODO Calculate this
+    private final static double COUNTS_PER_DEGREE = 1;
 
     private HardwareMap hardwareMap;
     private Telemetry telemetry;
@@ -186,7 +187,7 @@ public class Hardware {
     }
 
     void runToPos(DcMotor motor, int counts, double power,
-                         int timeoutMillis, LinearOpMode opMode) {
+                  int timeoutMillis, LinearOpMode opMode) {
         motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
@@ -221,10 +222,29 @@ public class Hardware {
         while (opMode.opModeIsActive() && (frontLeft.isBusy() || frontRight.isBusy()
                 || backLeft.isBusy() || backRight.isBusy())
                 && runtime.milliseconds() < timeoutMillis) {
-            telemetry.addData("Back Left Pos", backLeft.getCurrentPosition());
-            telemetry.addData("Back Left Target", backLeft.getTargetPosition());
+
+            telemetry.addData("Completion",
+                    (Math.abs(frontLeft.getCurrentPosition()) + Math.abs(frontLeft.getCurrentPosition())
+                            + Math.abs(backLeft.getCurrentPosition()) + Math.abs(backRight.getCurrentPosition()))
+                            / (Math.abs(frontLeftCounts) + Math.abs(frontRightCounts)
+                            + Math.abs(backLeftCounts) + Math.abs(backRightCounts)) + "%");
+            telemetry.addLine();
+
+            telemetry.addLine("Position, Target, Difference");
+            telemetry.addData("Front Left", frontLeft.getCurrentPosition() + ", " +
+                    frontLeftCounts + ", " + (frontLeft.getTargetPosition()
+                    - frontLeft.getCurrentPosition()));
+            telemetry.addData("Front Right", frontRight.getCurrentPosition() + ", " +
+                    frontRightCounts + ", " + (frontRightCounts
+                    - frontRight.getCurrentPosition()));
+            telemetry.addData("Back Left", backLeft.getCurrentPosition() + ", " +
+                    backLeftCounts + ", " + (backLeft.getTargetPosition()
+                    - backLeft.getCurrentPosition()));
+            telemetry.addData("Back Right", backRight.getCurrentPosition() + ", " +
+                    backRightCounts + ", " + (backRight.getTargetPosition()
+                    - backRight.getCurrentPosition()));
+
             telemetry.update();
-            opMode.idle();
         }
 
         frontLeft.setPower(0);
@@ -238,7 +258,7 @@ public class Hardware {
     }
 
     void driveForward(double mm, double power, int timeoutMillis, LinearOpMode opMode) {
-        int counts = (int) (mm * MM_PER_COUNT);
+        int counts = (int) (mm * COUNTS_PER_MM);
         move(counts, counts, counts, counts, power, timeoutMillis, opMode);
         float robotRotation = Orientation.getOrientation(
                 targetPos, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;
@@ -246,8 +266,11 @@ public class Hardware {
                 (float) (mm * Math.sin(robotRotation)), 0);
     }
 
-    void turnRight(int counts, double power, int timeoutMillis, LinearOpMode opMode) {
-        move(counts, -counts, counts, -counts, power, timeoutMillis, opMode);
+    void turnLeft(int degrees, double power, int timeoutMillis, LinearOpMode opMode) {
+        int counts = (int) (degrees * COUNTS_PER_DEGREE);
+        move(-counts, counts, -counts, counts, power, timeoutMillis, opMode);
+        targetPos.rotate(AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES,
+                0, 0, degrees);
     }
 
     OpenGLMatrix getRobotLocation() {
