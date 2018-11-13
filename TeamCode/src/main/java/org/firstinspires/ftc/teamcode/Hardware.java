@@ -2,7 +2,10 @@ package org.firstinspires.ftc.teamcode;
 
 import android.graphics.Color;
 
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.*;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -12,15 +15,16 @@ import org.firstinspires.ftc.robotcore.external.navigation.*;
 import java.util.Arrays;
 
 public class Hardware {
+    private final static double MM_PER_COUNT = .27125;
+
     private HardwareMap hardwareMap;
     private Telemetry telemetry;
+    private OpenGLMatrix targetPos = new OpenGLMatrix();
 
-    private DcMotor frontLeft, frontRight, backLeft, backRight, slide, arm, elbow;
-    private CRServo leftGrabber, rightGrabber;
-    private Servo door, sampler;
-    private ColorSensor colorSensor;
-
-    private double armTarget, elbowTarget;
+    DcMotor frontLeft, frontRight, backLeft, backRight, slide, arm, elbow;
+    CRServo leftGrabber, rightGrabber;
+    Servo door, sampler;
+    ColorSensor colorSensor;
 
     private VuforiaTrackables navTargets;
     private OpenGLMatrix lastPos;
@@ -42,112 +46,20 @@ public class Hardware {
         sampler      = hardwareMap.servo.get("sampler");
         colorSensor  = hardwareMap.colorSensor.get("colorSensor");
 
-        frontLeft  .setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        frontRight .setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        backLeft   .setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        backRight  .setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        slide      .setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        arm        .setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        elbow      .setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        setWheelMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        frontLeft  .setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        frontRight .setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backLeft   .setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backRight  .setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        slide      .setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        arm        .setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        elbow      .setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        armTarget = arm.getCurrentPosition();
-        elbowTarget = elbow.getCurrentPosition();
-
-        colorSensor.enableLed(true);
-
-        slide .setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        arm   .setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        elbow .setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        slide .setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        arm   .setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        elbow .setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         frontLeft    .setDirection(DcMotorSimple.Direction.REVERSE);
         backLeft     .setDirection(DcMotorSimple.Direction.REVERSE);
-        slide        .setDirection(DcMotorSimple.Direction.REVERSE);
         elbow        .setDirection(DcMotorSimple.Direction.REVERSE);
         rightGrabber .setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
-    void setWheelsVector(double x, double y, double turn) {
-        frontLeft  .setPower( x + y + turn);
-        frontRight .setPower(-x + y - turn);
-        backLeft   .setPower(-x + y + turn);
-        backRight  .setPower( x + y - turn);
-    }
-
-    void setLinearSlidePower(double power) {
-        slide.setPower(power);
-    }
-
-    void setGrabberPower(double power) {
-        leftGrabber.setPower(power);
-        rightGrabber.setPower(power);
-    }
-
-    void setArmPower(double power) {
-        arm.setPower(power);
-    }
-
-    void increaseArmPos(double move) {
-        armTarget += move * 10;
-        if (armTarget - arm.getCurrentPosition() > 280) {
-            armTarget = arm.getCurrentPosition() + 280;
-        }
-        if (arm.getCurrentPosition() - armTarget > 280) {
-            armTarget = arm.getCurrentPosition() - 280;
-        }
-        arm.setTargetPosition((int) armTarget);
-        telemetry.addData("Arm Target", armTarget);
-        telemetry.addData("Arm Pos", arm.getCurrentPosition());
-        telemetry.addData("Arm Diff", arm.getCurrentPosition() - armTarget);
-    }
-
     void setElbowPower(double power) {
         elbow.setPower(power);
-    }
-
-    void increaseElbowPos(double move) {
-        elbowTarget += move * 3;
-        if (elbowTarget - elbow.getCurrentPosition() > 72) {
-            elbowTarget = elbow.getCurrentPosition() + 72;
-        }
-        if (elbow.getCurrentPosition() - elbowTarget > 72) {
-            elbowTarget = elbow.getCurrentPosition() - 72;
-        }
-        elbow.setTargetPosition((int) elbowTarget);
-        telemetry.addData("Elbow Target", elbowTarget);
-        telemetry.addData("Elbow Pos", elbow.getCurrentPosition());
-        telemetry.addData("Elbow Diff", elbow.getCurrentPosition() - elbowTarget);
-    }
-
-    void resetArm() {
-        armTarget = arm.getCurrentPosition();
-        arm.setTargetPosition((int) armTarget);
-        setElbowMode(DcMotor.RunMode.RUN_TO_POSITION);
-    }
-
-    void resetElbow() {
-        elbowTarget = elbow.getCurrentPosition();
-        elbow.setTargetPosition((int) elbowTarget);
-        setElbowMode(DcMotor.RunMode.RUN_TO_POSITION);
-    }
-
-    void setArmMode(DcMotor.RunMode mode) {
-        arm.setMode(mode);
-    }
-
-    void setElbowMode(DcMotor.RunMode mode) {
-        elbow.setMode(mode);
-    }
-
-    void setDoorPosition(double position) {
-        door.setPosition(position);
     }
 
     void setWheelZeroPowerBehavior(DcMotor.ZeroPowerBehavior behavior) {
@@ -155,6 +67,14 @@ public class Hardware {
         frontRight .setZeroPowerBehavior(behavior);
         backLeft   .setZeroPowerBehavior(behavior);
         backRight  .setZeroPowerBehavior(behavior);
+    }
+
+    void setWheelMode(DcMotor.RunMode mode) {
+        frontLeft  .setMode(mode);
+        frontRight .setMode(mode);
+        backLeft   .setMode(mode);
+        backRight  .setMode(mode);
+        slide      .setMode(mode);
     }
 
     void argbTelemetry() {
@@ -166,20 +86,7 @@ public class Hardware {
         telemetry.addData("HSV", Arrays.toString(getHSV()));
     }
 
-    void setSamplerPos(double position) {
-        sampler.setPosition(position);
-    }
-
-    private float[] getHSV() {
-        float[] hsv = new float[3];
-        Color.RGBToHSV(colorSensor.red(), colorSensor.green(), colorSensor.blue(), hsv);
-        return hsv;
-    }
-
-    boolean isYellow() {
-        return getHSV()[0] < 27;
-    }
-
+    // Autonomous methods
     void initVuforia() {
         telemetry.addLine("Initializing Vuforia");
         telemetry.update();
@@ -214,47 +121,44 @@ public class Hardware {
         final float targetHeight = 6 * mmPerInch;
 
         frontTarget.setLocation(OpenGLMatrix
-                .translation(0, -fieldWidth, targetHeight)
-                .multiplied(Orientation.getRotationMatrix(
-                        AxesReference.EXTRINSIC, AxesOrder.XYZ,
-                        AngleUnit.DEGREES, 90, 0, 180
-                )));
-
-        redTarget.setLocation(OpenGLMatrix
-                .translation(fieldWidth, 0, targetHeight)
-                .multiplied(Orientation.getRotationMatrix(
-                        AxesReference.EXTRINSIC, AxesOrder.XYZ,
-                        AngleUnit.DEGREES, 90, 0, -90
-                )));
-
-        backTarget.setLocation(OpenGLMatrix
-                .translation(0, fieldWidth, targetHeight)
-                .multiplied(Orientation.getRotationMatrix(
-                        AxesReference.EXTRINSIC, AxesOrder.XYZ,
-                        AngleUnit.DEGREES, 90, 0, 0
-                )));
-
-        blueTarget.setLocation(OpenGLMatrix
                 .translation(-fieldWidth, 0, targetHeight)
                 .multiplied(Orientation.getRotationMatrix(
                         AxesReference.EXTRINSIC, AxesOrder.XYZ,
                         AngleUnit.DEGREES, 90, 0, 90
                 )));
 
+        redTarget.setLocation(OpenGLMatrix
+                .translation(0, -fieldWidth, targetHeight)
+                .multiplied(Orientation.getRotationMatrix(
+                        AxesReference.EXTRINSIC, AxesOrder.XYZ,
+                        AngleUnit.DEGREES, 90, 0, 180
+                )));
+
+        backTarget.setLocation(OpenGLMatrix
+                .translation(fieldWidth, 0, targetHeight)
+                .multiplied(Orientation.getRotationMatrix(
+                        AxesReference.EXTRINSIC, AxesOrder.XYZ,
+                        AngleUnit.DEGREES, 90, 0, -90
+                )));
+
+        blueTarget.setLocation(OpenGLMatrix
+                .translation(0, fieldWidth, targetHeight)
+                .multiplied(Orientation.getRotationMatrix(
+                        AxesReference.EXTRINSIC, AxesOrder.XYZ,
+                        AngleUnit.DEGREES, 90, 0, 0
+                )));
+
         for (VuforiaTrackable navTarget : navTargets) {
             telemetry.addData(navTarget.getName(), navTarget.getLocation().formatAsTransform());
         }
 
-        // TODO Phone location when the robot is built
         OpenGLMatrix phoneLocation = OpenGLMatrix
-                .translation(0, 0, 0)
+                .translation(-140, -140, 345)
                 .multiplied(Orientation.getRotationMatrix(
                         AxesReference.EXTRINSIC, AxesOrder.XYZ,
-                        AngleUnit.DEGREES, 0, 0, 0
+                        AngleUnit.DEGREES, 90, 0, -90
                 ));
         telemetry.addData("Phone", phoneLocation.formatAsTransform());
-
-        telemetry.update();
 
         for (VuforiaTrackable target : navTargets) {
             ((VuforiaTrackableDefaultListener) target.getListener())
@@ -265,6 +169,85 @@ public class Hardware {
 
         telemetry.addLine("Initialized Vuforia");
         telemetry.update();
+    }
+
+    void setTargetPos(OpenGLMatrix targetPos) {
+        this.targetPos = targetPos;
+    }
+
+    boolean isYellow() {
+        return getHSV()[0] < 27;
+    }
+
+    private float[] getHSV() {
+        float[] hsv = new float[3];
+        Color.RGBToHSV(colorSensor.red(), colorSensor.green(), colorSensor.blue(), hsv);
+        return hsv;
+    }
+
+    void runToPos(DcMotor motor, int counts, double power,
+                         int timeoutMillis, LinearOpMode opMode) {
+        motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        motor.setTargetPosition(motor.getCurrentPosition() + counts);
+        motor.setPower(power);
+        ElapsedTime runtime = new ElapsedTime();
+        runtime.reset();
+        while (opMode.opModeIsActive() && motor.isBusy() && runtime.milliseconds() < timeoutMillis) {
+            opMode.idle();
+        }
+        motor.setPower(0);
+    }
+
+    private void move(int frontLeftCounts, int frontRightCounts,
+                      int backLeftCounts, int backRightCounts,
+                      double power, int timeoutMillis, LinearOpMode opMode) {
+        setWheelMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        setWheelMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        frontLeft.setTargetPosition(frontLeftCounts);
+        frontRight.setTargetPosition(frontRightCounts);
+        backLeft.setTargetPosition(backLeftCounts);
+        backRight.setTargetPosition(backRightCounts);
+
+        frontLeft.setPower(power);
+        frontRight.setPower(power);
+        backLeft.setPower(power);
+        backRight.setPower(power);
+
+        ElapsedTime runtime = new ElapsedTime();
+        runtime.reset();
+        while (opMode.opModeIsActive() && (frontLeft.isBusy() || frontRight.isBusy()
+                || backLeft.isBusy() || backRight.isBusy())
+                && runtime.milliseconds() < timeoutMillis) {
+            telemetry.addData("Back Left Pos", backLeft.getCurrentPosition());
+            telemetry.addData("Back Left Target", backLeft.getTargetPosition());
+            telemetry.update();
+            opMode.idle();
+        }
+
+        frontLeft.setPower(0);
+        frontRight.setPower(0);
+        backLeft.setPower(0);
+        backRight.setPower(0);
+    }
+
+    void strafeRight(int counts, double power, int timeoutMillis, LinearOpMode opMode) {
+        move(counts, -counts, -counts, counts, power, timeoutMillis, opMode);
+    }
+
+    void driveForward(double mm, double power, int timeoutMillis, LinearOpMode opMode) {
+        int counts = (int) (mm * MM_PER_COUNT);
+        move(counts, counts, counts, counts, power, timeoutMillis, opMode);
+        float robotRotation = Orientation.getOrientation(
+                targetPos, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;
+        targetPos.translate((float) (mm * Math.cos(robotRotation)),
+                (float) (mm * Math.sin(robotRotation)), 0);
+    }
+
+    void turnRight(int counts, double power, int timeoutMillis, LinearOpMode opMode) {
+        move(counts, -counts, counts, -counts, power, timeoutMillis, opMode);
     }
 
     OpenGLMatrix getRobotLocation() {
