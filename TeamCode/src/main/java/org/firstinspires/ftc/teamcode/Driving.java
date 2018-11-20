@@ -6,11 +6,11 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 @TeleOp
 public class Driving extends OpMode {
-    private static final int ARM_UP_POS = 1300;
+    private static final int ARM_UP_POS = 1250;
     private Hardware hardware;
     private double speed = .5;
-    private boolean reverse, brakes, armPower, elbowPower, doorOpen, armUp, armToggling;
-    private boolean prevX1, prevY1, prevL2, prevR2, prevX2, prevY2;
+    private boolean reverse, brakes, armPower, elbowPower, doorOpen, armToggling;
+    private boolean prevX1, prevY1, prevX2, prevY2, prevL2, prevR2;
     private double armTarget, elbowTarget;
 
     @Override
@@ -32,14 +32,22 @@ public class Driving extends OpMode {
 
     @Override
     public void loop() {
+        // Button input
+        boolean x1 = gamepad1.x;
+        boolean y1 = gamepad1.y;
+        boolean x2 = gamepad2.x;
+        boolean y2 = gamepad2.y;
+        boolean l2 = gamepad2.left_stick_button;
+        boolean r2 = gamepad2.right_stick_button;
+
         // Wheels
         // Reversing
-        if (gamepad1.x && !prevX1) {
+        if (x1 && !prevX1) {
             reverse = !reverse;
         }
 
         // Brakes
-        if (gamepad1.y && !prevY1) {
+        if (y1 && !prevY1) {
             brakes = !brakes;
             hardware.setWheelZeroPowerBehavior(
                     brakes ? DcMotor.ZeroPowerBehavior.BRAKE : DcMotor.ZeroPowerBehavior.FLOAT
@@ -101,7 +109,7 @@ public class Driving extends OpMode {
         // Arm and elbow
         // Power mode
         if (!armToggling) {
-            if (gamepad2.left_stick_button && !prevL2) {
+            if (l2 && !prevL2) {
                 armPower = !armPower;
                 if (armPower) {
                     hardware.arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -120,7 +128,7 @@ public class Driving extends OpMode {
             }
         }
 
-        if (gamepad2.right_stick_button && !prevR2) {
+        if (r2 && !prevR2) {
             elbowPower = !elbowPower;
             if (elbowPower) {
                 hardware.elbow.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -139,17 +147,11 @@ public class Driving extends OpMode {
         }
 
         // Toggle arm position
-        if (gamepad2.x && !prevX2) {
-            armUp = !armUp;
+        if (x2 && !prevX2) {
             armToggling = true;
             armPower = false;
-            if (armUp) {
-                armTarget = ARM_UP_POS;
-                hardware.arm.setTargetPosition(ARM_UP_POS);
-            } else {
-                armTarget = 0;
-                hardware.arm.setTargetPosition(0);
-            }
+            armTarget = ARM_UP_POS;
+            hardware.arm.setTargetPosition(ARM_UP_POS);
             hardware.arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             hardware.arm.setPower(.2);
         }
@@ -159,21 +161,21 @@ public class Driving extends OpMode {
         }
 
         // Door
-        if (gamepad2.y && !prevY2) {
+        if (y2 && !prevY2) {
             doorOpen = !doorOpen;
         }
         hardware.door.setPosition(doorOpen ? 1 : .5);
 
         // Sampler maintain position
-        hardware.sampler.setPosition(1);
+        hardware.sampler.setPosition(.8);
 
         // Update prevs
-        prevX1 = gamepad1.x;
-        prevY1 = gamepad1.y;
-        prevX2 = gamepad2.x;
-        prevY2 = gamepad2.y;
-        prevL2 = gamepad2.left_stick_button;
-        prevR2 = gamepad2.right_stick_button;
+        prevX1 = x1;
+        prevY1 = y1;
+        prevX2 = x2;
+        prevY2 = y2;
+        prevL2 = l2;
+        prevR2 = r2;
 
         // Telemetry
         telemetry.addData("Reverse", reverse);

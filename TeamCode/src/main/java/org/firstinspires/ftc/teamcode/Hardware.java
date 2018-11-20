@@ -9,14 +9,15 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
+import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.*;
+import org.firstinspires.ftc.robotcore.internal.vuforia.VuforiaException;
 
 import java.util.Arrays;
 
 public class Hardware {
     private final static double COUNTS_PER_MM = 800 / 217;
-    // TODO Calculate this
-    private final static double COUNTS_PER_DEGREE = 1;
+    private final static double COUNTS_PER_DEGREE = 531563 / 28800;
 
     private HardwareMap hardwareMap;
     private Telemetry telemetry;
@@ -88,6 +89,7 @@ public class Hardware {
     }
 
     // Autonomous methods
+
     void initVuforia() {
         telemetry.addLine("Initializing Vuforia");
         telemetry.update();
@@ -260,17 +262,56 @@ public class Hardware {
     void driveForward(double mm, double power, int timeoutMillis, LinearOpMode opMode) {
         int counts = (int) (mm * COUNTS_PER_MM);
         move(counts, counts, counts, counts, power, timeoutMillis, opMode);
+    }
+
+    void driveForwardRecorded(double mm, double power, int timeoutMillis, LinearOpMode opMode) {
+        driveForward(mm, power, timeoutMillis, opMode);
         float robotRotation = Orientation.getOrientation(
                 targetPos, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;
         targetPos.translate((float) (mm * Math.cos(robotRotation)),
                 (float) (mm * Math.sin(robotRotation)), 0);
     }
 
-    void turnLeft(int degrees, double power, int timeoutMillis, LinearOpMode opMode) {
+    void turnLeft(double degrees, double power, int timeoutMillis, LinearOpMode opMode) {
         int counts = (int) (degrees * COUNTS_PER_DEGREE);
         move(-counts, counts, -counts, counts, power, timeoutMillis, opMode);
+    }
+
+    void turnLeftRecorded(double degrees, double power, int timeoutMillis, LinearOpMode opMode) {
+        turnLeft(degrees, power, timeoutMillis, opMode);
         targetPos.rotate(AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES,
-                0, 0, degrees);
+                0, 0, (float) degrees);
+    }
+
+    void adjustPosition(LinearOpMode opMode) throws InterruptedException {
+        ElapsedTime runtime = new ElapsedTime();
+        runtime.reset();
+        while (runtime.milliseconds() < 500) {
+            opMode.idle();
+        }
+        OpenGLMatrix location = getRobotLocation();
+
+        if (location != null) {
+            telemetry.addLine("Location found!");
+            telemetry.update();
+            VectorF diff = targetPos.getTranslation().subtracted(location.getTranslation());
+
+            float locationAngle = Orientation.getOrientation(location, AxesReference.EXTRINSIC,
+                    AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;
+            float targetAngle = Orientation.getOrientation(targetPos, AxesReference.EXTRINSIC,
+                    AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;
+
+            // Go to x of target
+            turnLeft(-locationAngle, .5, 1_000, opMode);
+            driveForward(diff.getData()[0], .5, 5_000, opMode);
+
+            // Go to y of target
+            turnLeft(90, .5, 1_000, opMode);
+            driveForward(diff.getData()[1], .5, 5_000, opMode);
+
+            // Go to angle of target
+            turnLeft(targetAngle - 90, .5, 1_000, opMode);
+        }
     }
 
     OpenGLMatrix getRobotLocation() {
