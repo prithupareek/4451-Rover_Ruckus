@@ -11,13 +11,12 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.*;
-import org.firstinspires.ftc.robotcore.internal.vuforia.VuforiaException;
 
 import java.util.Arrays;
 
 public class Hardware {
     private final static double COUNTS_PER_MM = 800 / 217;
-    private final static double COUNTS_PER_DEGREE = 531563 / 28800;
+    private final static double COUNTS_PER_DEGREE = 20.7;
 
     private HardwareMap hardwareMap;
     private Telemetry telemetry;
@@ -109,10 +108,10 @@ public class Hardware {
         VuforiaLocalizer vuforiaLocalizer = ClassFactory.getInstance().createVuforia(parameters);
         navTargets = vuforiaLocalizer.loadTrackablesFromAsset("RoverRuckus");
 
-        VuforiaTrackable frontTarget = navTargets.get(0);
+        VuforiaTrackable frontTarget = navTargets.get(2);
         VuforiaTrackable redTarget   = navTargets.get(1);
-        VuforiaTrackable backTarget  = navTargets.get(2);
-        VuforiaTrackable blueTarget  = navTargets.get(3);
+        VuforiaTrackable backTarget  = navTargets.get(3);
+        VuforiaTrackable blueTarget  = navTargets.get(0);
 
         frontTarget .setName("FrontWall");
         redTarget   .setName("RedWall");
@@ -193,7 +192,7 @@ public class Hardware {
         motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        motor.setTargetPosition(motor.getCurrentPosition() + counts);
+        motor.setTargetPosition(counts);
         motor.setPower(power);
         ElapsedTime runtime = new ElapsedTime();
         runtime.reset();
@@ -203,21 +202,25 @@ public class Hardware {
         motor.setPower(0);
     }
 
-    private void move(int frontLeftCounts, int frontRightCounts,
-                      int backLeftCounts, int backRightCounts,
-                      double power, int timeoutMillis, LinearOpMode opMode) {
+    void move(int frontLeftCounts, int frontRightCounts,
+              int backLeftCounts, int backRightCounts,
+              double power, int timeoutMillis, LinearOpMode opMode) {
+        while (!opMode.gamepad1.x && opMode.opModeIsActive()) {
+            opMode.idle();
+        }
+
         setWheelMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         setWheelMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        frontLeft.setTargetPosition(frontLeftCounts);
-        frontRight.setTargetPosition(frontRightCounts);
-        backLeft.setTargetPosition(backLeftCounts);
-        backRight.setTargetPosition(backRightCounts);
+        frontLeft  .setTargetPosition(frontLeftCounts);
+        frontRight .setTargetPosition(frontRightCounts);
+        backLeft   .setTargetPosition(backLeftCounts);
+        backRight  .setTargetPosition(backRightCounts);
 
-        frontLeft.setPower(power);
-        frontRight.setPower(power);
-        backLeft.setPower(power);
-        backRight.setPower(power);
+        frontLeft  .setPower(power);
+        frontRight .setPower(power);
+        backLeft   .setPower(power);
+        backRight  .setPower(power);
 
         ElapsedTime runtime = new ElapsedTime();
         runtime.reset();
@@ -225,11 +228,15 @@ public class Hardware {
                 || backLeft.isBusy() || backRight.isBusy())
                 && runtime.milliseconds() < timeoutMillis) {
 
-            telemetry.addData("Completion",
-                    (Math.abs(frontLeft.getCurrentPosition()) + Math.abs(frontLeft.getCurrentPosition())
-                            + Math.abs(backLeft.getCurrentPosition()) + Math.abs(backRight.getCurrentPosition()))
-                            / (Math.abs(frontLeftCounts) + Math.abs(frontRightCounts)
-                            + Math.abs(backLeftCounts) + Math.abs(backRightCounts)) + "%");
+            double completion = 100 *
+                    (double) (Math.abs(frontLeft.getCurrentPosition())
+                            + Math.abs(frontRight.getCurrentPosition())
+                            + Math.abs(backLeft.getCurrentPosition())
+                            + Math.abs(backRight.getCurrentPosition()))
+                    / (double) (Math.abs(frontLeftCounts) + Math.abs(frontRightCounts)
+                    + Math.abs(backLeftCounts) + Math.abs(backRightCounts));
+
+            telemetry.addData("Completion", completion + "%");
             telemetry.addLine();
 
             telemetry.addLine("Position, Target, Difference");
@@ -249,10 +256,10 @@ public class Hardware {
             telemetry.update();
         }
 
-        frontLeft.setPower(0);
-        frontRight.setPower(0);
-        backLeft.setPower(0);
-        backRight.setPower(0);
+        frontLeft  .setPower(0);
+        frontRight .setPower(0);
+        backLeft   .setPower(0);
+        backRight  .setPower(0);
     }
 
     void strafeRight(int counts, double power, int timeoutMillis, LinearOpMode opMode) {
@@ -283,7 +290,7 @@ public class Hardware {
                 0, 0, (float) degrees);
     }
 
-    void adjustPosition(LinearOpMode opMode) throws InterruptedException {
+    boolean adjustPosition(LinearOpMode opMode) {
         ElapsedTime runtime = new ElapsedTime();
         runtime.reset();
         while (runtime.milliseconds() < 500) {
@@ -291,26 +298,35 @@ public class Hardware {
         }
         OpenGLMatrix location = getRobotLocation();
 
-        if (location != null) {
+        if (location == null) {
+            return false;
+        } else {
             telemetry.addLine("Location found!");
             telemetry.update();
             VectorF diff = targetPos.getTranslation().subtracted(location.getTranslation());
 
             float locationAngle = Orientation.getOrientation(location, AxesReference.EXTRINSIC,
                     AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;
+            telemetry.addData("Location Angle", locationAngle);
             float targetAngle = Orientation.getOrientation(targetPos, AxesReference.EXTRINSIC,
                     AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;
+            telemetry.addData("Target Angle", targetAngle);
+            telemetry.addData("Location", location.formatAsTransform());
+            telemetry.addData("Target", targetPos.formatAsTransform());
+            telemetry.update();
 
             // Go to x of target
-            turnLeft(-locationAngle, .5, 1_000, opMode);
+            turnLeft(-locationAngle, .5, 5_000, opMode);
             driveForward(diff.getData()[0], .5, 5_000, opMode);
 
             // Go to y of target
-            turnLeft(90, .5, 1_000, opMode);
+            turnLeft(90, .5, 5_000, opMode);
             driveForward(diff.getData()[1], .5, 5_000, opMode);
 
             // Go to angle of target
-            turnLeft(targetAngle - 90, .5, 1_000, opMode);
+            turnLeft(targetAngle - 90, .5, 5_000, opMode);
+
+            return true;
         }
     }
 

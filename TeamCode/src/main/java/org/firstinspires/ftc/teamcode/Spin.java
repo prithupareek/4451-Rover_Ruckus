@@ -1,8 +1,10 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+@Autonomous
 public class Spin extends LinearOpMode {
     Hardware hardware;
 
@@ -24,6 +26,6 @@ public class Spin extends LinearOpMode {
 
         waitForStart();
 
-        hardware.turnLeft(360, .5, 2_000, this);
+        hardware.turnLeft(360, .5, 5_000, this);
     }
 }

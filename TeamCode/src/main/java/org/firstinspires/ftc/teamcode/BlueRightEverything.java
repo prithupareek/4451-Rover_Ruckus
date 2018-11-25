@@ -42,9 +42,10 @@ public class BlueRightEverything extends LinearOpMode {
         hardware.runToPos(hardware.slide, 14000, 1, 10_000, this);
         hardware.strafeRight(-1000, .5, 2_000, this);
         hardware.runToPos(hardware.slide, -13000, 1, 10_000, this);
-        hardware.driveForward(180, .5, 2_000, this);
-        hardware.turnLeft(60, .5, 1_000, this);
-        hardware.driveForward(500, .5, 2_000, this);
+
+        hardware.driveForward(300, .5, 2_000, this);
+        hardware.turnLeft(70, .5, 1_000, this);
+        hardware.driveForward(800, .5, 2_000, this);
 
         hardware.setTargetPos(
                 OpenGLMatrix.translation(-1430, 0, 0)
