@@ -20,7 +20,6 @@ public class Hardware {
 
     private HardwareMap hardwareMap;
     private Telemetry telemetry;
-    private OpenGLMatrix targetPos = new OpenGLMatrix();
 
     DcMotor frontLeft, frontRight, backLeft, backRight, slide, arm, elbow;
     CRServo leftGrabber, rightGrabber;
@@ -173,10 +172,6 @@ public class Hardware {
         telemetry.update();
     }
 
-    void setTargetPos(OpenGLMatrix targetPos) {
-        this.targetPos = targetPos;
-    }
-
     boolean isYellow() {
         return getHSV()[0] < 27;
     }
@@ -202,12 +197,12 @@ public class Hardware {
         motor.setPower(0);
     }
 
-    void move(int frontLeftCounts, int frontRightCounts,
+    private void move(int frontLeftCounts, int frontRightCounts,
               int backLeftCounts, int backRightCounts,
               double power, int timeoutMillis, LinearOpMode opMode) {
-        while (!opMode.gamepad1.x && opMode.opModeIsActive()) {
-            opMode.idle();
-        }
+//        while (!opMode.gamepad1.x && opMode.opModeIsActive()) {
+//            opMode.idle();
+//        }
 
         setWheelMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         setWheelMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -271,26 +266,12 @@ public class Hardware {
         move(counts, counts, counts, counts, power, timeoutMillis, opMode);
     }
 
-    void driveForwardRecorded(double mm, double power, int timeoutMillis, LinearOpMode opMode) {
-        driveForward(mm, power, timeoutMillis, opMode);
-        float robotRotation = Orientation.getOrientation(
-                targetPos, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;
-        targetPos.translate((float) (mm * Math.cos(robotRotation)),
-                (float) (mm * Math.sin(robotRotation)), 0);
-    }
-
     void turnLeft(double degrees, double power, int timeoutMillis, LinearOpMode opMode) {
         int counts = (int) (degrees * COUNTS_PER_DEGREE);
         move(-counts, counts, -counts, counts, power, timeoutMillis, opMode);
     }
 
-    void turnLeftRecorded(double degrees, double power, int timeoutMillis, LinearOpMode opMode) {
-        turnLeft(degrees, power, timeoutMillis, opMode);
-        targetPos.rotate(AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES,
-                0, 0, (float) degrees);
-    }
-
-    boolean adjustPosition(LinearOpMode opMode) {
+    boolean toPosition(OpenGLMatrix targetPos, LinearOpMode opMode) {
         ElapsedTime runtime = new ElapsedTime();
         runtime.reset();
         while (runtime.milliseconds() < 500) {
@@ -303,28 +284,30 @@ public class Hardware {
         } else {
             telemetry.addLine("Location found!");
             telemetry.update();
+
             VectorF diff = targetPos.getTranslation().subtracted(location.getTranslation());
 
             float locationAngle = Orientation.getOrientation(location, AxesReference.EXTRINSIC,
                     AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;
-            telemetry.addData("Location Angle", locationAngle);
             float targetAngle = Orientation.getOrientation(targetPos, AxesReference.EXTRINSIC,
                     AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;
+
+            telemetry.addData("Location Angle", locationAngle);
             telemetry.addData("Target Angle", targetAngle);
             telemetry.addData("Location", location.formatAsTransform());
             telemetry.addData("Target", targetPos.formatAsTransform());
             telemetry.update();
 
             // Go to x of target
-            turnLeft(-locationAngle, .5, 5_000, opMode);
-            driveForward(diff.getData()[0], .5, 5_000, opMode);
+            turnLeft(-locationAngle, .3, 5_000, opMode);
+            driveForward(diff.getData()[0], .3, 5_000, opMode);
 
             // Go to y of target
-            turnLeft(90, .5, 5_000, opMode);
-            driveForward(diff.getData()[1], .5, 5_000, opMode);
+            turnLeft(90, .3, 5_000, opMode);
+            driveForward(diff.getData()[1], .3, 5_000, opMode);
 
             // Go to angle of target
-            turnLeft(targetAngle - 90, .5, 5_000, opMode);
+            turnLeft(targetAngle - 90, .3, 5_000, opMode);
 
             return true;
         }

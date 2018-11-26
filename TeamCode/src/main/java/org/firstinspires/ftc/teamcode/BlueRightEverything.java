@@ -9,7 +9,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.robotcore.internal.vuforia.VuforiaException;
 
 @Autonomous
 public class BlueRightEverything extends LinearOpMode {
@@ -24,12 +23,12 @@ public class BlueRightEverything extends LinearOpMode {
         hardware.arm   .setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         hardware.elbow .setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        hardware.arm.setTargetPosition(hardware.arm.getCurrentPosition());
-        hardware.elbow.setTargetPosition(hardware.elbow.getCurrentPosition());
+        hardware.arm   .setTargetPosition(hardware.arm.getCurrentPosition());
+        hardware.elbow .setTargetPosition(hardware.elbow.getCurrentPosition());
 
-        hardware.arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        hardware.elbow.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        hardware.slide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        hardware.arm   .setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        hardware.elbow .setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        hardware.slide .setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         hardware.initVuforia();
 
@@ -44,17 +43,20 @@ public class BlueRightEverything extends LinearOpMode {
         hardware.runToPos(hardware.slide, -13000, 1, 10_000, this);
 
         hardware.driveForward(300, .5, 2_000, this);
-        hardware.turnLeft(70, .5, 1_000, this);
+        hardware.turnLeft(80, .5, 1_000, this);
         hardware.driveForward(800, .5, 2_000, this);
 
-        hardware.setTargetPos(
-                OpenGLMatrix.translation(-1430, 0, 0)
-                        .multiplied(Orientation.getRotationMatrix(
-                                AxesReference.EXTRINSIC, AxesOrder.XYZ,
-                                AngleUnit.DEGREES, 0, 0, 90
-                        ))
-        );
+        OpenGLMatrix targetPos = OpenGLMatrix.translation(-1400, 0, 0)
+                .multiplied(Orientation.getRotationMatrix(
+                        AxesReference.EXTRINSIC, AxesOrder.XYZ,
+                        AngleUnit.DEGREES, 0, 0, 225
+                ));
 
-        hardware.adjustPosition(this);
+        hardware.toPosition(targetPos, this);
+
+        hardware.driveForward(-900, .5, 4_000, this);
+        hardware.sampler.setPosition(.2);
+
+        wait(1_000);
     }
 }
