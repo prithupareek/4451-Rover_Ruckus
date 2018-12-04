@@ -16,7 +16,7 @@ import java.util.Arrays;
 
 public class Hardware {
     private final static double COUNTS_PER_MM = 800 / 217;
-    private final static double COUNTS_PER_DEGREE = 20.7;
+    private final static double COUNTS_PER_DEGREE = 181800 / 8640;
 
     private HardwareMap hardwareMap;
     private Telemetry telemetry;
@@ -74,12 +74,12 @@ public class Hardware {
         frontRight .setMode(mode);
         backLeft   .setMode(mode);
         backRight  .setMode(mode);
-        slide      .setMode(mode);
     }
 
     void argbTelemetry() {
-        telemetry.addData("ARGB", colorSensor.alpha() + ", " + colorSensor.red()
-                + ", " + colorSensor.green() + ", " + colorSensor.blue());
+        NormalizedRGBA rgba = ((NormalizedColorSensor) colorSensor).getNormalizedColors();
+        telemetry.addData("RGBA", "%.0f, %.0f, %.0f, %.0f",
+                rgba.red * 10000f, rgba.green * 10000f, rgba.blue * 10000f, rgba.alpha * 10000f);
     }
 
     void hsvTelemetry() {
@@ -178,32 +178,55 @@ public class Hardware {
 
     private float[] getHSV() {
         float[] hsv = new float[3];
-        Color.RGBToHSV(colorSensor.red(), colorSensor.green(), colorSensor.blue(), hsv);
+        NormalizedRGBA rgba = ((NormalizedColorSensor) colorSensor).getNormalizedColors();
+        int red = (int) (rgba.red * 10000);
+        int green = (int) (rgba.green * 10000);
+        int blue = (int) (rgba.blue * 10000);
+        if (red > 255) {
+            red = 255;
+            green *= 255 / (double) red;
+            blue *= 255 / (double) red;
+        }
+        if (green > 255) {
+            green = 255;
+            red *= 255 / (double) green;
+            blue *= 255 / (double) green;
+        }
+        if (blue > 255) {
+            blue = 255;
+            red *= 255 / (double) blue;
+            green *= 255 / (double) blue;
+        }
+        Color.RGBToHSV(red, green, blue, hsv);
         return hsv;
     }
 
-    void runToPos(DcMotor motor, int counts, double power,
-                  int timeoutMillis, LinearOpMode opMode) {
-        motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    void slideToPos(int counts, double power, int timeoutMillis, LinearOpMode opMode) {
+        slide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        slide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        motor.setTargetPosition(counts);
-        motor.setPower(power);
+        slide.setTargetPosition(counts);
+        slide.setPower(power);
         ElapsedTime runtime = new ElapsedTime();
         runtime.reset();
-        while (opMode.opModeIsActive() && motor.isBusy() && runtime.milliseconds() < timeoutMillis) {
-            opMode.idle();
+        while (opMode.opModeIsActive() && slide.isBusy()
+                && runtime.milliseconds() < timeoutMillis) {
+            telemetry.addData("Completion", "%.0f%%",
+                    (double) slide.getCurrentPosition() / (double) counts * 100);
+            telemetry.addLine();
+
+            telemetry.addLine("Position, Target, Difference");
+            telemetry.addData("Linear Slide", "%d, %d, %d",
+                    slide.getCurrentPosition(), counts,
+                    (slide.getTargetPosition() - slide.getCurrentPosition())
+            );
         }
-        motor.setPower(0);
+        slide.setPower(0);
     }
 
     private void move(int frontLeftCounts, int frontRightCounts,
-              int backLeftCounts, int backRightCounts,
-              double power, int timeoutMillis, LinearOpMode opMode) {
-//        while (!opMode.gamepad1.x && opMode.opModeIsActive()) {
-//            opMode.idle();
-//        }
-
+                      int backLeftCounts, int backRightCounts,
+                      double power, int timeoutMillis, LinearOpMode opMode) {
         setWheelMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         setWheelMode(DcMotor.RunMode.RUN_TO_POSITION);
 
@@ -219,34 +242,40 @@ public class Hardware {
 
         ElapsedTime runtime = new ElapsedTime();
         runtime.reset();
-        while (opMode.opModeIsActive() && (frontLeft.isBusy() || frontRight.isBusy()
-                || backLeft.isBusy() || backRight.isBusy())
-                && runtime.milliseconds() < timeoutMillis) {
-
+        while (opMode.opModeIsActive() && runtime.milliseconds() < timeoutMillis && (
+                frontLeft.isBusy() || frontRight.isBusy() || backLeft.isBusy() || backRight.isBusy()
+        )) {
             double completion = 100 *
                     (double) (Math.abs(frontLeft.getCurrentPosition())
                             + Math.abs(frontRight.getCurrentPosition())
                             + Math.abs(backLeft.getCurrentPosition())
                             + Math.abs(backRight.getCurrentPosition()))
-                    / (double) (Math.abs(frontLeftCounts) + Math.abs(frontRightCounts)
-                    + Math.abs(backLeftCounts) + Math.abs(backRightCounts));
+                    /
+                    (double) (Math.abs(frontLeftCounts)
+                            + Math.abs(frontRightCounts)
+                            + Math.abs(backLeftCounts)
+                            + Math.abs(backRightCounts));
 
-            telemetry.addData("Completion", completion + "%");
+            telemetry.addData("Completion", "%.0f%%", completion);
             telemetry.addLine();
 
             telemetry.addLine("Position, Target, Difference");
-            telemetry.addData("Front Left", frontLeft.getCurrentPosition() + ", " +
-                    frontLeftCounts + ", " + (frontLeft.getTargetPosition()
-                    - frontLeft.getCurrentPosition()));
-            telemetry.addData("Front Right", frontRight.getCurrentPosition() + ", " +
-                    frontRightCounts + ", " + (frontRightCounts
-                    - frontRight.getCurrentPosition()));
-            telemetry.addData("Back Left", backLeft.getCurrentPosition() + ", " +
-                    backLeftCounts + ", " + (backLeft.getTargetPosition()
-                    - backLeft.getCurrentPosition()));
-            telemetry.addData("Back Right", backRight.getCurrentPosition() + ", " +
-                    backRightCounts + ", " + (backRight.getTargetPosition()
-                    - backRight.getCurrentPosition()));
+            telemetry.addData("Front Left", "%d, %d, %d",
+                    frontLeft.getCurrentPosition(), frontLeftCounts,
+                    (frontLeft.getTargetPosition() - frontLeft.getCurrentPosition())
+            );
+            telemetry.addData("Front Right", "%d, %d, %d",
+                    frontRight.getCurrentPosition(), frontRightCounts,
+                    (frontRightCounts - frontRight.getCurrentPosition())
+            );
+            telemetry.addData("Back Left", "%d, %d, %d",
+                    backLeft.getCurrentPosition(), backLeftCounts,
+                    (backLeft.getTargetPosition() - backLeft.getCurrentPosition())
+            );
+            telemetry.addData("Back Right", "%d, %d, %d",
+                    backRight.getCurrentPosition(), backRightCounts,
+                    (backRight.getTargetPosition() - backRight.getCurrentPosition())
+            );
 
             telemetry.update();
         }
@@ -271,12 +300,18 @@ public class Hardware {
         move(-counts, counts, -counts, counts, power, timeoutMillis, opMode);
     }
 
-    boolean toPosition(OpenGLMatrix targetPos, LinearOpMode opMode) {
+    void pause(int ms, LinearOpMode opMode) {
         ElapsedTime runtime = new ElapsedTime();
         runtime.reset();
-        while (runtime.milliseconds() < 500) {
-            opMode.idle();
+        while (opMode.opModeIsActive() && runtime.milliseconds() < ms) {
+            telemetry.addData("Paused", "%.0fms of %dms",
+                    runtime.milliseconds(), ms);
+            telemetry.update();
         }
+    }
+
+    boolean toPosition(OpenGLMatrix targetPos, LinearOpMode opMode) {
+        pause(500, opMode);
         OpenGLMatrix location = getRobotLocation();
 
         if (location == null) {

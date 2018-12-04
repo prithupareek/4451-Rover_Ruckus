@@ -11,7 +11,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 @Autonomous
-public class BlueRightEverything extends LinearOpMode {
+public class RedRightEverything extends LinearOpMode {
     private Hardware hardware;
 
     @Override
@@ -49,7 +49,7 @@ public class BlueRightEverything extends LinearOpMode {
         hardware.turnLeft(80, .5, 1_000, this);
         hardware.driveForward(800, .5, 2_000, this);
 
-        OpenGLMatrix targetPos = OpenGLMatrix.translation(-1450, 0, 0)
+        OpenGLMatrix targetPos = OpenGLMatrix.translation(1450, 0, 0)
                 .multiplied(Orientation.getRotationMatrix(
                         AxesReference.EXTRINSIC, AxesOrder.XYZ,
                         AngleUnit.DEGREES, 0, 0, 225
@@ -61,6 +61,7 @@ public class BlueRightEverything extends LinearOpMode {
 
         hardware.driveForward(-904, .3, 4_000, this);
         hardware.sampler.setPosition(.18);
+        hardware.pause(1_000, this);
         while (opModeIsActive() && !gamepad1.x) {
             hardware.hsvTelemetry();
             telemetry.addData("isYellow", hardware.isYellow());

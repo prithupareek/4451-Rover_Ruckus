@@ -18,6 +18,7 @@ public class Driving extends OpMode {
         hardware = new Hardware(hardwareMap, telemetry);
 
         hardware.setWheelMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        hardware.slide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         hardware.arm   .setMode(DcMotor.RunMode.RUN_TO_POSITION);
         hardware.elbow .setMode(DcMotor.RunMode.RUN_TO_POSITION);

@@ -11,8 +11,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 @Autonomous
-public class BlueRightEverything extends LinearOpMode {
-    private Hardware hardware;
+public class BlueLeftEverything extends LinearOpMode {
+    Hardware hardware;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -49,7 +49,7 @@ public class BlueRightEverything extends LinearOpMode {
         hardware.turnLeft(80, .5, 1_000, this);
         hardware.driveForward(800, .5, 2_000, this);
 
-        OpenGLMatrix targetPos = OpenGLMatrix.translation(-1450, 0, 0)
+        OpenGLMatrix targetPos = OpenGLMatrix.translation(0, 1450, 0)
                 .multiplied(Orientation.getRotationMatrix(
                         AxesReference.EXTRINSIC, AxesOrder.XYZ,
                         AngleUnit.DEGREES, 0, 0, 225
@@ -59,40 +59,40 @@ public class BlueRightEverything extends LinearOpMode {
             requestOpModeStop();
         }
 
-        hardware.driveForward(-904, .3, 4_000, this);
+        hardware.driveForward(904, .3, 4_000, this);
         hardware.sampler.setPosition(.18);
+        hardware.pause(1_000, this);
         while (opModeIsActive() && !gamepad1.x) {
             hardware.hsvTelemetry();
             telemetry.addData("isYellow", hardware.isYellow());
             telemetry.update();
         }
         if (hardware.isYellow()) {
-            hardware.driveForward(200, .3, 2_000, this);
+            hardware.driveForward(-200, .3, 2_000, this);
             hardware.sampler.setPosition(1);
-            hardware.driveForward(-1162, .3, 5_000, this);
+            hardware.driveForward(1162, .3, 5_000, this);
         } else {
             hardware.sampler.setPosition(1);
             hardware.pause(500, this);
-            hardware.driveForward(-431, .3, 3_000, this);
+            hardware.driveForward(431, .3, 3_000, this);
             hardware.sampler.setPosition(.18);
             hardware.pause(1_000, this);
             if (hardware.isYellow()) {
-                hardware.driveForward(200, .3, 2_000, this);
+                hardware.driveForward(-200, .3, 2_000, this);
                 hardware.sampler.setPosition(1);
-                hardware.driveForward(-731, .3, 3_000, this);
+                hardware.driveForward(731, .3, 3_000, this);
             } else {
                 hardware.sampler.setPosition(1);
                 hardware.pause(500, this);
-                hardware.driveForward(-431, .3, 3_000, this);
+                hardware.driveForward(431, .3, 3_000, this);
                 hardware.sampler.setPosition(.18);
                 hardware.pause(1_000, this);
-                hardware.driveForward(200, .3, 2_000, this);
+                hardware.driveForward(-200, .3, 2_000, this);
                 hardware.sampler.setPosition(1);
-                hardware.driveForward(-300, .3, 2_000, this);
+                hardware.driveForward(300, .3, 2_000, this);
             }
         }
-        hardware.turnLeft(135, .5, 2_000, this);
-        hardware.driveForward(1730, .5, 5_000, this);
+        hardware.turnLeft(135, .3, 3_000, this);
         hardware.leftGrabber.setPower(-1);
         hardware.rightGrabber.setPower(-1);
         hardware.pause(1_000, this);

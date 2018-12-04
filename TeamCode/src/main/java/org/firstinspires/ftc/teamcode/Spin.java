@@ -26,6 +26,6 @@ public class Spin extends LinearOpMode {
 
         waitForStart();
 
-        hardware.turnLeft(360, .5, 5_000, this);
+        hardware.turnLeft(360, .5, 10_000, this);
     }
 }
