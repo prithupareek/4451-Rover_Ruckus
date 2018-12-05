@@ -173,7 +173,7 @@ public class Hardware {
     }
 
     boolean isYellow() {
-        return getHSV()[0] < 27;
+        return getHSV()[0] < 35;
     }
 
     private float[] getHSV() {
@@ -243,7 +243,7 @@ public class Hardware {
         ElapsedTime runtime = new ElapsedTime();
         runtime.reset();
         while (opMode.opModeIsActive() && runtime.milliseconds() < timeoutMillis && (
-                frontLeft.isBusy() || frontRight.isBusy() || backLeft.isBusy() || backRight.isBusy()
+                frontLeft.isBusy() && frontRight.isBusy() && backLeft.isBusy() && backRight.isBusy()
         )) {
             double completion = 100 *
                     (double) (Math.abs(frontLeft.getCurrentPosition())
@@ -316,36 +316,30 @@ public class Hardware {
 
         if (location == null) {
             return false;
-        } else {
-            telemetry.addLine("Location found!");
-            telemetry.update();
-
-            VectorF diff = targetPos.getTranslation().subtracted(location.getTranslation());
-
-            float locationAngle = Orientation.getOrientation(location, AxesReference.EXTRINSIC,
-                    AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;
-            float targetAngle = Orientation.getOrientation(targetPos, AxesReference.EXTRINSIC,
-                    AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;
-
-            telemetry.addData("Location Angle", locationAngle);
-            telemetry.addData("Target Angle", targetAngle);
-            telemetry.addData("Location", location.formatAsTransform());
-            telemetry.addData("Target", targetPos.formatAsTransform());
-            telemetry.update();
-
-            // Go to x of target
-            turnLeft(-locationAngle, .3, 5_000, opMode);
-            driveForward(diff.getData()[0], .3, 5_000, opMode);
-
-            // Go to y of target
-            turnLeft(90, .3, 5_000, opMode);
-            driveForward(diff.getData()[1], .3, 5_000, opMode);
-
-            // Go to angle of target
-            turnLeft(targetAngle - 90, .3, 5_000, opMode);
-
-            return true;
         }
+        telemetry.addLine("Location found!");
+        telemetry.update();
+
+        VectorF diff = targetPos.getTranslation().subtracted(location.getTranslation());
+
+        float locationAngle = Orientation.getOrientation(location, AxesReference.EXTRINSIC,
+                AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;
+        float targetAngle = Orientation.getOrientation(targetPos, AxesReference.EXTRINSIC,
+                AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;
+
+        telemetry.addData("Location", location.formatAsTransform());
+        telemetry.addData("Target", targetPos.formatAsTransform());
+        telemetry.update();
+
+        turnLeft(targetAngle - locationAngle + 90, .3, 5_000, opMode);
+        double newDiffAngle = Math.toDegrees(Math.atan(diff.get(1) / diff.get(0))) - targetAngle;
+        driveForward(diff.magnitude() * Math.sin(Math.toRadians(newDiffAngle)),
+                .3, 5_000, opMode);
+        turnLeft(-90, .3, 5_000, opMode);
+        driveForward(diff.magnitude() * Math.cos(Math.toRadians(newDiffAngle)),
+                .3, 5_000, opMode);
+
+        return true;
     }
 
     OpenGLMatrix getRobotLocation() {
