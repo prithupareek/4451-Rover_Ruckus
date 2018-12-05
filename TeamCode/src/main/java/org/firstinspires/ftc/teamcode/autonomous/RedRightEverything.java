@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -9,6 +9,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.teamcode.Hardware;
 
 @Autonomous
 public class RedRightEverything extends LinearOpMode {
@@ -48,7 +49,6 @@ public class RedRightEverything extends LinearOpMode {
         hardware.driveForward(300, 1, 2_000, this);
         hardware.turnLeft(80, 1, 1_000, this);
         hardware.driveForward(800, 1, 2_000, this);
-
 
         OpenGLMatrix targetPos = OpenGLMatrix.translation(770, -650, 0)
                 .multiplied(Orientation.getRotationMatrix(

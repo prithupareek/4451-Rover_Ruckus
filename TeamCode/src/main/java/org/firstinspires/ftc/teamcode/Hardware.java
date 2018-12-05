@@ -21,15 +21,15 @@ public class Hardware {
     private HardwareMap hardwareMap;
     private Telemetry telemetry;
 
-    DcMotor frontLeft, frontRight, backLeft, backRight, slide, arm, elbow;
-    CRServo leftGrabber, rightGrabber;
-    Servo door, sampler;
-    ColorSensor colorSensor;
+    public DcMotor frontLeft, frontRight, backLeft, backRight, slide, arm, elbow;
+    public CRServo leftGrabber, rightGrabber;
+    public Servo door, sampler;
+    public ColorSensor colorSensor;
 
     private VuforiaTrackables navTargets;
     private OpenGLMatrix lastPos;
 
-    Hardware(HardwareMap hardwareMap, Telemetry telemetry) {
+    public Hardware(HardwareMap hardwareMap, Telemetry telemetry) {
         this.hardwareMap = hardwareMap;
         this.telemetry = telemetry;
 
@@ -58,37 +58,37 @@ public class Hardware {
         rightGrabber .setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
-    void setElbowPower(double power) {
+    public void setElbowPower(double power) {
         elbow.setPower(power);
     }
 
-    void setWheelZeroPowerBehavior(DcMotor.ZeroPowerBehavior behavior) {
+    public void setWheelZeroPowerBehavior(DcMotor.ZeroPowerBehavior behavior) {
         frontLeft  .setZeroPowerBehavior(behavior);
         frontRight .setZeroPowerBehavior(behavior);
         backLeft   .setZeroPowerBehavior(behavior);
         backRight  .setZeroPowerBehavior(behavior);
     }
 
-    void setWheelMode(DcMotor.RunMode mode) {
+    public void setWheelMode(DcMotor.RunMode mode) {
         frontLeft  .setMode(mode);
         frontRight .setMode(mode);
         backLeft   .setMode(mode);
         backRight  .setMode(mode);
     }
 
-    void argbTelemetry() {
+    public void argbTelemetry() {
         NormalizedRGBA rgba = ((NormalizedColorSensor) colorSensor).getNormalizedColors();
         telemetry.addData("RGBA", "%.0f, %.0f, %.0f, %.0f",
                 rgba.red * 10000f, rgba.green * 10000f, rgba.blue * 10000f, rgba.alpha * 10000f);
     }
 
-    void hsvTelemetry() {
+    public void hsvTelemetry() {
         telemetry.addData("HSV", Arrays.toString(getHSV()));
     }
 
     // Autonomous methods
 
-    void initVuforia() {
+    public void initVuforia() {
         telemetry.addLine("Initializing Vuforia");
         telemetry.update();
 
@@ -172,7 +172,7 @@ public class Hardware {
         telemetry.update();
     }
 
-    boolean isYellow() {
+    public boolean isYellow() {
         return getHSV()[0] < 35;
     }
 
@@ -201,7 +201,7 @@ public class Hardware {
         return hsv;
     }
 
-    void slideToPos(int counts, double power, int timeoutMillis, LinearOpMode opMode) {
+    public void slideToPos(int counts, double power, int timeoutMillis, LinearOpMode opMode) {
         slide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         slide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
@@ -286,21 +286,21 @@ public class Hardware {
         backRight  .setPower(0);
     }
 
-    void strafeRight(int counts, double power, int timeoutMillis, LinearOpMode opMode) {
+    public void strafeRight(int counts, double power, int timeoutMillis, LinearOpMode opMode) {
         move(counts, -counts, -counts, counts, power, timeoutMillis, opMode);
     }
 
-    void driveForward(double mm, double power, int timeoutMillis, LinearOpMode opMode) {
+    public void driveForward(double mm, double power, int timeoutMillis, LinearOpMode opMode) {
         int counts = (int) (mm * COUNTS_PER_MM);
         move(counts, counts, counts, counts, power, timeoutMillis, opMode);
     }
 
-    void turnLeft(double degrees, double power, int timeoutMillis, LinearOpMode opMode) {
+    public void turnLeft(double degrees, double power, int timeoutMillis, LinearOpMode opMode) {
         int counts = (int) (degrees * COUNTS_PER_DEGREE);
         move(-counts, counts, -counts, counts, power, timeoutMillis, opMode);
     }
 
-    void pause(int ms, LinearOpMode opMode) {
+    public void pause(int ms, LinearOpMode opMode) {
         ElapsedTime runtime = new ElapsedTime();
         runtime.reset();
         while (opMode.opModeIsActive() && runtime.milliseconds() < ms) {
@@ -310,7 +310,7 @@ public class Hardware {
         }
     }
 
-    boolean toPosition(OpenGLMatrix targetPos, LinearOpMode opMode) {
+    public boolean toPosition(OpenGLMatrix targetPos, LinearOpMode opMode) {
         pause(500, opMode);
         OpenGLMatrix location = getRobotLocation();
 
@@ -342,7 +342,7 @@ public class Hardware {
         return true;
     }
 
-    OpenGLMatrix getRobotLocation() {
+    private OpenGLMatrix getRobotLocation() {
         VuforiaTrackable visible = null;
         for (VuforiaTrackable trackable : navTargets) {
             if (((VuforiaTrackableDefaultListener) trackable.getListener()).isVisible()) {
