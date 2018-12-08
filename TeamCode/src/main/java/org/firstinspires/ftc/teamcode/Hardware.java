@@ -331,8 +331,18 @@ public class Hardware {
         telemetry.addData("Target", targetPos.formatAsTransform());
         telemetry.update();
 
-        turnLeft(targetAngle - locationAngle + 90, .3, 5_000, opMode);
+        double turnAngle = (targetAngle - locationAngle + 90) % 360;
+        if (turnAngle > 180) {
+            turnAngle = turnAngle - 360;
+        }
+        if (turnAngle < -180) {
+            turnAngle = turnAngle + 360;
+        }
+        turnLeft(turnAngle, .3, 5_000, opMode);
         double newDiffAngle = Math.toDegrees(Math.atan(diff.get(1) / diff.get(0))) - targetAngle;
+        if (diff.get(0) < 0) {
+            newDiffAngle += 180;
+        }
         driveForward(diff.magnitude() * Math.sin(Math.toRadians(newDiffAngle)),
                 .3, 5_000, opMode);
         turnLeft(-90, .3, 5_000, opMode);
@@ -342,7 +352,7 @@ public class Hardware {
         return true;
     }
 
-    private OpenGLMatrix getRobotLocation() {
+    OpenGLMatrix getRobotLocation() {
         VuforiaTrackable visible = null;
         for (VuforiaTrackable trackable : navTargets) {
             if (((VuforiaTrackableDefaultListener) trackable.getListener()).isVisible()) {
