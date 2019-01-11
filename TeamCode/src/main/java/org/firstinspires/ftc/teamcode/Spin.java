@@ -8,26 +8,26 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 @Disabled
 @Autonomous
 public class Spin extends LinearOpMode {
-    Hardware hardware;
+	Hardware hardware;
 
-    @Override
-    public void runOpMode() throws InterruptedException {
-        hardware = new Hardware(hardwareMap, telemetry);
-        hardware.setWheelZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+	@Override
+	public void runOpMode() throws InterruptedException {
+		hardware = new Hardware(hardwareMap, telemetry);
+		hardware.setWheelZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        hardware.slide .setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        hardware.arm   .setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        hardware.elbow .setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+		hardware.slide .setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+		hardware.arm   .setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+		hardware.elbow .setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        hardware.arm.setTargetPosition(hardware.arm.getCurrentPosition());
-        hardware.elbow.setTargetPosition(hardware.elbow.getCurrentPosition());
+		hardware.arm   .setTargetPosition(hardware.arm.getCurrentPosition());
+		hardware.elbow .setTargetPosition(hardware.elbow.getCurrentPosition());
 
-        hardware.arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        hardware.elbow.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        hardware.slide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+		hardware.arm   .setMode(DcMotor.RunMode.RUN_TO_POSITION);
+		hardware.elbow .setMode(DcMotor.RunMode.RUN_TO_POSITION);
+		hardware.slide .setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        waitForStart();
+		waitForStart();
 
-        hardware.turnLeft(360, .5, 10_000, this);
-    }
+		hardware.turnLeft(360, .5, 10_000, this);
+	}
 }

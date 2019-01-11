@@ -13,18 +13,18 @@ import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 @Disabled
 @Autonomous
 public class VuforiaTest extends OpMode {
-    private Hardware hardware;
+	private Hardware hardware;
 
-    @Override
-    public void init() {
-        hardware = new Hardware(hardwareMap, telemetry);
-        hardware.initVuforia();
-    }
+	@Override
+	public void init() {
+		hardware = new Hardware(hardwareMap, telemetry);
+		hardware.initVuforia();
+	}
 
-    @Override
-    public void loop() {
-        OpenGLMatrix robotPos = hardware.getRobotLocation();
-        telemetry.addData("Robot", robotPos == null ? "No targets visible" : robotPos.formatAsTransform());
-        telemetry.update();
-    }
+	@Override
+	public void loop() {
+		OpenGLMatrix robotPos = hardware.getRobotLocation();
+		telemetry.addData("Robot", robotPos == null ? "No targets visible" : robotPos.formatAsTransform());
+		telemetry.update();
+	}
 }

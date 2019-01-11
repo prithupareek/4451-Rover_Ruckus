@@ -1,23 +1,21 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
-@Disabled
 @Autonomous
 public class ColorSensorTest extends OpMode {
-    private Hardware hardware;
+	private Hardware hardware;
 
-    @Override
-    public void init() {
-        hardware = new Hardware(hardwareMap, telemetry);
-    }
+	@Override
+	public void init() {
+		hardware = new Hardware(hardwareMap, telemetry);
+	}
 
-    @Override
-    public void loop() {
-        hardware.argbTelemetry();
-        hardware.hsvTelemetry();
-        telemetry.addData("Yellow", hardware.isYellow());
-    }
+	@Override
+	public void loop() {
+		hardware.argbTelemetry();
+		hardware.hsvTelemetry();
+		telemetry.addData("Yellow", hardware.isYellow());
+	}
 }
